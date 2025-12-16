@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState, useRef } from 'react'
+import Image from 'next/image'
 import { PortfolioItem } from './types'
 
 interface PortfolioSectionProps {
@@ -38,7 +39,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
     const windowHeight = window.innerHeight
 
     const start = -rect.top
-    const end = start + windowHeight
+    const _end = start + windowHeight
 
     setScrollProgress(Math.max(0, Math.min(1, start / (containerHeight - windowHeight))))
   }
@@ -138,11 +139,12 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
                       <div className={`relative overflow-hidden ${
                         !isClient || isMobile ? 'h-64 flex-shrink-0' : ''
                       }`}>
-                        <img
-                          src={item.metadata.image}
+                        <Image
+                          src={item.metadata.image || ''}
                           alt={item.metadata.title}
-                          className="w-full h-full object-cover cursor-pointer"
-                          loading={i < 2 ? 'eager' : 'lazy'}
+                          fill
+                          className="object-cover cursor-pointer"
+                          priority={i < 2}
                         />
                         <div className="absolute inset-0 bg-black/20"></div>
 

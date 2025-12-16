@@ -24,7 +24,7 @@ export async function GET() {
         order: service.order,
         slug: service.slug,
         features: service.features?.map(f => f.feature) || [],
-        image: service.image?.url,
+        image: typeof service.image === 'object' ? service.image?.url : undefined,
         featured: service.featured || false,
       },
       content: '', // Not used in current frontend

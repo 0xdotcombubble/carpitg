@@ -22,7 +22,7 @@ export async function GET() {
         description: item.description,
         price: item.price,
         duration: item.duration,
-        image: item.image?.url,
+        image: typeof item.image === 'object' ? item.image?.url : undefined,
         order: item.order,
         popular: item.popular || false,
         features: item.features?.map(f => f.feature) || [],

@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState, useRef } from 'react'
+import Image from 'next/image'
 import { Check } from 'lucide-react'
 import { PricingItem } from './types'
 
@@ -67,10 +68,11 @@ const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [] }) =>
             className="absolute inset-0 w-full h-[120%]"
             style={{ transform: `translateY(${parallaxY}px)` }}
           >
-            <img
+            <Image
               src="/background.jpg"
               alt="Background"
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
             />
           </div>
         )}
@@ -78,10 +80,11 @@ const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [] }) =>
         {/* Mobile Background */}
         {isClient && isMobile && (
           <div className="absolute inset-0 w-full h-full">
-            <img
+            <Image
               src="/background.jpg"
               alt="Background"
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
             />
           </div>
         )}

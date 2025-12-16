@@ -11,7 +11,7 @@ interface ServicesSectionProps {
 const ServicesSection: React.FC<ServicesSectionProps> = ({ siteSettings, services = [] }) => {
   const [isMobile, setIsMobile] = useState(false)
   const [isClient, setIsClient] = useState(false)
-  const [scrollY, setScrollY] = useState(0)
+  const [_scrollY, _setScrollY] = useState(0)
   const containerRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ siteSettings, service
     }
 
     const handleScroll = () => {
-      setScrollY(window.pageYOffset)
+      _setScrollY(window.pageYOffset)
     }
 
     checkMobile()

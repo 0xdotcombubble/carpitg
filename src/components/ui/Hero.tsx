@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { ChevronRight } from 'lucide-react'
-import Button from './Button'
+import Image from 'next/image'
 import { SiteSettings } from './types'
 
 interface HeroProps {
@@ -58,10 +58,12 @@ const Hero: React.FC<HeroProps> = ({ siteSettings }) => {
             isMobile ? 'top-0 left-0 h-[130vh]' : 'top-0 left-0 h-[150vh]'
           }`}
         >
-          <img
+          <Image
             src={siteSettings.heroBackgroundImage}
             alt="CarPit Garage Background"
-            className="w-full h-full object-cover brightness-75"
+            fill
+            className="object-cover brightness-75"
+            priority
           />
         </div>
       )}
@@ -81,9 +83,12 @@ const Hero: React.FC<HeroProps> = ({ siteSettings }) => {
 
               {/* Logo */}
               <div className="flex justify-center mb-2 md:mb-3">
-                <img
+                <Image
                   src={siteSettings.heroLogo}
                   alt="CarPit Garage Logo"
+                  width={256}
+                  height={256}
+                  priority
                   className="h-28 sm:h-36 md:h-48 lg:h-56 xl:h-64 w-auto object-contain brightness-0 saturate-100"
                   style={{
                     filter: 'invert(27%) sepia(96%) saturate(5471%) hue-rotate(355deg) brightness(104%) contrast(94%)'

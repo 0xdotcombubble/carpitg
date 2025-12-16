@@ -14,8 +14,12 @@ export async function GET() {
     // Transform image uploads to include URLs
     const transformedSettings = {
       ...siteSettings,
-      heroBackgroundImage: siteSettings.heroBackgroundImage?.url || '/background.jpg',
-      heroLogo: siteSettings.heroLogo?.url || '/logo.svg',
+      heroBackgroundImage: typeof siteSettings.heroBackgroundImage === 'object'
+        ? siteSettings.heroBackgroundImage?.url || '/background.jpg'
+        : '/background.jpg',
+      heroLogo: typeof siteSettings.heroLogo === 'object'
+        ? siteSettings.heroLogo?.url || '/logo.svg'
+        : '/logo.svg',
     }
 
     return NextResponse.json(transformedSettings, {

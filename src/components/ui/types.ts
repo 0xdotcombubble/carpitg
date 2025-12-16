@@ -20,7 +20,13 @@ export interface SiteSettings {
 
 export interface ContentItem {
   slug: string;
-  metadata: Record<string, any>;
+  metadata: {
+    title: string;
+    description: string;
+    order: number;
+    slug: string;
+    [key: string]: string | number | boolean | string[] | undefined;
+  };
   content: string;
 }
 

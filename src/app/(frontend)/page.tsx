@@ -51,28 +51,28 @@ export default function HomePage() {
         const settingsResponse = await fetch('/api/content/site-settings')
         if (settingsResponse.ok) {
           const settingsData = await settingsResponse.json()
-          setSiteSettings({ ...defaultSiteSettings, ...settingsData })
+          setSiteSettings({ ...defaultSiteSettings, ...(settingsData as SiteSettings) })
         }
 
         // Load services
         const servicesResponse = await fetch('/api/content/services')
         if (servicesResponse.ok) {
           const servicesData = await servicesResponse.json()
-          setServices(servicesData)
+          setServices(servicesData as ServiceItem[])
         }
 
         // Load portfolio items
         const portfolioResponse = await fetch('/api/content/portfolio')
         if (portfolioResponse.ok) {
           const portfolioData = await portfolioResponse.json()
-          setPortfolioItems(portfolioData)
+          setPortfolioItems(portfolioData as PortfolioItem[])
         }
 
         // Load pricing items
         const pricingResponse = await fetch('/api/content/pricing')
         if (pricingResponse.ok) {
           const pricingData = await pricingResponse.json()
-          setPricingItems(pricingData)
+          setPricingItems(pricingData as PricingItem[])
         }
       } catch (error) {
         console.error('Error loading data:', error)

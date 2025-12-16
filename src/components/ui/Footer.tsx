@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import Image from 'next/image'
 import { Facebook, Instagram } from 'lucide-react'
 import { SiteSettings } from './types'
 import { formatPhoneNumber } from '../utils'
@@ -27,9 +28,11 @@ const Footer: React.FC<FooterProps> = ({ siteSettings }) => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12 text-center md:text-left">
           <div>
             <div className="flex justify-center md:justify-start mb-4">
-              <img
+              <Image
                 src="/logo.svg"
                 alt="CarPit Garage Logo"
+                width={64}
+                height={64}
                 className="h-12 sm:h-14 md:h-16 w-auto object-contain brightness-0 saturate-100"
                 style={{
                   filter:
