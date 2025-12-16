@@ -69,6 +69,9 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    services: Service;
+    portfolio: Portfolio;
+    pricing: Pricing;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +81,9 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
+    portfolio: PortfolioSelect<false> | PortfolioSelect<true>;
+    pricing: PricingSelect<false> | PricingSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -86,8 +92,12 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'site-settings': SiteSetting;
+  };
+  globalsSelect: {
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+  };
   locale: null;
   user: User & {
     collection: 'users';
@@ -158,6 +168,136 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services".
+ */
+export interface Service {
+  id: number;
+  title: string;
+  /**
+   * Auto-generated from title, or enter custom value
+   */
+  slug?: string | null;
+  description: string;
+  /**
+   * e.g., "35.000 Ft-tól" or "Ártól függően"
+   */
+  price: string;
+  category: 'exterior' | 'interior' | 'protection' | 'detailing' | 'special';
+  features?:
+    | {
+        feature: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Optional image to showcase this service
+   */
+  image?: (number | null) | Media;
+  /**
+   * Lower numbers appear first
+   */
+  order?: number | null;
+  featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "portfolio".
+ */
+export interface Portfolio {
+  id: number;
+  title: string;
+  /**
+   * Auto-generated from title, or enter custom value
+   */
+  slug?: string | null;
+  description: string;
+  category: 'exterior' | 'interior' | 'full' | 'paint' | 'ceramic' | 'restoration';
+  image: number | Media;
+  gallery?:
+    | {
+        image: number | Media;
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Link to services that were performed on this project
+   */
+  services?: (number | Service)[] | null;
+  beforeAfter?: {
+    before?: (number | null) | Media;
+    after?: (number | null) | Media;
+  };
+  vehicleInfo?: {
+    make?: string | null;
+    model?: string | null;
+    year?: number | null;
+  };
+  /**
+   * Featured projects appear prominently on the homepage
+   */
+  featured?: boolean | null;
+  /**
+   * Lower numbers appear first
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pricing".
+ */
+export interface Pricing {
+  id: number;
+  title: string;
+  /**
+   * Auto-generated from title, or enter custom value
+   */
+  slug?: string | null;
+  description: string;
+  /**
+   * e.g., "45.000 Ft" or "85.000 - 120.000 Ft"
+   */
+  price: string;
+  /**
+   * e.g., "2-3 óra" or "Egész nap"
+   */
+  duration: string;
+  category: 'basic' | 'premium' | 'luxury' | 'custom';
+  features: {
+    feature: string;
+    included?: boolean | null;
+    id?: string | null;
+  }[];
+  /**
+   * Optional image to showcase this package
+   */
+  image?: (number | null) | Media;
+  /**
+   * Link to services included in this package
+   */
+  services?: (number | Service)[] | null;
+  /**
+   * Mark this package as the most popular choice
+   */
+  popular?: boolean | null;
+  /**
+   * Lower numbers appear first
+   */
+  order?: number | null;
+  vehicleTypes?: ('small' | 'medium' | 'large' | 'suv' | 'van' | 'luxury')[] | null;
+  /**
+   * Any special conditions, disclaimers, or additional information
+   */
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -187,6 +327,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'services';
+        value: number | Service;
+      } | null)
+    | ({
+        relationTo: 'portfolio';
+        value: number | Portfolio;
+      } | null)
+    | ({
+        relationTo: 'pricing';
+        value: number | Pricing;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -270,6 +422,91 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services_select".
+ */
+export interface ServicesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  description?: T;
+  price?: T;
+  category?: T;
+  features?:
+    | T
+    | {
+        feature?: T;
+        id?: T;
+      };
+  image?: T;
+  order?: T;
+  featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "portfolio_select".
+ */
+export interface PortfolioSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  description?: T;
+  category?: T;
+  image?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        caption?: T;
+        id?: T;
+      };
+  services?: T;
+  beforeAfter?:
+    | T
+    | {
+        before?: T;
+        after?: T;
+      };
+  vehicleInfo?:
+    | T
+    | {
+        make?: T;
+        model?: T;
+        year?: T;
+      };
+  featured?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pricing_select".
+ */
+export interface PricingSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  description?: T;
+  price?: T;
+  duration?: T;
+  category?: T;
+  features?:
+    | T
+    | {
+        feature?: T;
+        included?: T;
+        id?: T;
+      };
+  image?: T;
+  services?: T;
+  popular?: T;
+  order?: T;
+  vehicleTypes?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -307,6 +544,58 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  heroTitle: string;
+  heroSubtitle: string;
+  heroDescription: string;
+  heroBackgroundImage: number | Media;
+  heroLogo: number | Media;
+  portfolioTitle: string;
+  portfolioSubtitle: string;
+  servicesTitle: string;
+  servicesSubtitle: string;
+  pricingTitle: string;
+  pricingSubtitle: string;
+  pricingNote: string;
+  phone: string;
+  email: string;
+  address: string;
+  instagram?: string | null;
+  facebook?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  heroTitle?: T;
+  heroSubtitle?: T;
+  heroDescription?: T;
+  heroBackgroundImage?: T;
+  heroLogo?: T;
+  portfolioTitle?: T;
+  portfolioSubtitle?: T;
+  servicesTitle?: T;
+  servicesSubtitle?: T;
+  pricingTitle?: T;
+  pricingSubtitle?: T;
+  pricingNote?: T;
+  phone?: T;
+  email?: T;
+  address?: T;
+  instagram?: T;
+  facebook?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

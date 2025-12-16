@@ -1,0 +1,11 @@
+{
+	"id": "2",
+	"title": "Külső mosás",
+	"slug": "kulso-mosas",
+	"description": "Kézi autómosás, szárítás, alapvédelem",
+	"price": "8,000 Ft-tól",
+	"icon": "droplet",
+	"order": 2,
+	"featured": false,
+	"content": "Kézi autómosás, szárítás és alapvédelem. A szolgáltatás magában foglalja a külső felületek alapos megtisztítását és védőbevonat felvitelét."
+}

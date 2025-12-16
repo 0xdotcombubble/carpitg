@@ -1,59 +1,109 @@
-import { headers as getHeaders } from 'next/headers.js'
-import Image from 'next/image'
-import { getPayload } from 'payload'
-import React from 'react'
-import { fileURLToPath } from 'url'
+'use client'
 
-import config from '@/payload.config'
-import './styles.css'
+import React, { useState, useEffect } from 'react'
+import {
+  SmoothScrollWrapper,
+  Hero,
+  ServicesSection,
+  PortfolioSection,
+  PricingSection,
+  ContactSection,
+  Footer,
+} from '@/components/ui'
+import type { SiteSettings, ServiceItem, PortfolioItem, PricingItem } from '@/components/ui/types'
 
-export default async function HomePage() {
-  const headers = await getHeaders()
-  const payloadConfig = await config
-  const payload = await getPayload({ config: payloadConfig })
-  const { user } = await payload.auth({ headers })
+// Default site settings fallback
+const defaultSiteSettings: SiteSettings = {
+  heroTitle: 'AUTÓKOZMETIKA - DETAIL STUDIO',
+  heroSubtitle: 'Autód megérdemli a legjobbat',
+  heroDescription:
+    'Ahol a precizitás találkozik a szenvedéllyel. Minden autó egyedi, minden részlet számít',
+  heroBackgroundImage: '/background.jpg',
+  heroLogo: '/logo.svg',
+  portfolioTitle: 'Elvégzett Munkáink',
+  portfolioSubtitle: 'Válogatás a legfrissebb projektjeinkből',
+  servicesTitle: 'Egyedi Megoldások',
+  servicesSubtitle:
+    'Modern technológiák és hagyományos kézműves technikák egyesítése. Minden autó egyedi kezelést érdemel.',
+  pricingTitle: 'Transzparens árképzés',
+  pricingSubtitle:
+    'Válassz a négy csomag közül - mindegyik tartalmazza az anyagköltséget és a munkadíjat.',
+  pricingNote:
+    'Az árak átlagosan szennyezett, 5 személyes gépjárművekre vonatkoznak. Munkás autók, extrán szennyezett autók esetében az ár eltérhet.',
+  phone: '+36703339809',
+  email: 'info@carpitgarage.hu',
+  address: '1172 Budapest\nCinkotai út 26.',
+  instagram: 'https://www.instagram.com/carpit_grg',
+  facebook: 'https://www.facebook.com/share/16mtfkk7VR/',
+}
 
-  const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
+export default function HomePage() {
+  const [siteSettings, setSiteSettings] = useState<SiteSettings>(defaultSiteSettings)
+  const [services, setServices] = useState<ServiceItem[]>([])
+  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([])
+  const [pricingItems, setPricingItems] = useState<PricingItem[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
-  return (
-    <div className="home">
-      <div className="content">
-        <picture>
-          <source srcSet="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-favicon.svg" />
-          <Image
-            alt="Payload Logo"
-            height={65}
-            src="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-favicon.svg"
-            width={65}
-          />
-        </picture>
-        {!user && <h1>Welcome to your new project.</h1>}
-        {user && <h1>Welcome back, {user.email}</h1>}
-        <div className="links">
-          <a
-            className="admin"
-            href={payloadConfig.routes.admin}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Go to admin panel
-          </a>
-          <a
-            className="docs"
-            href="https://payloadcms.com/docs"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Documentation
-          </a>
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        // Load site settings from PayloadCMS
+        const settingsResponse = await fetch('/api/content/site-settings')
+        if (settingsResponse.ok) {
+          const settingsData = await settingsResponse.json()
+          setSiteSettings({ ...defaultSiteSettings, ...settingsData })
+        }
+
+        // Load services
+        const servicesResponse = await fetch('/api/content/services')
+        if (servicesResponse.ok) {
+          const servicesData = await servicesResponse.json()
+          setServices(servicesData)
+        }
+
+        // Load portfolio items
+        const portfolioResponse = await fetch('/api/content/portfolio')
+        if (portfolioResponse.ok) {
+          const portfolioData = await portfolioResponse.json()
+          setPortfolioItems(portfolioData)
+        }
+
+        // Load pricing items
+        const pricingResponse = await fetch('/api/content/pricing')
+        if (pricingResponse.ok) {
+          const pricingData = await pricingResponse.json()
+          setPricingItems(pricingData)
+        }
+      } catch (error) {
+        console.error('Error loading data:', error)
+        // Use default/fallback data
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadData()
+  }, [])
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto"></div>
+          <p className="mt-4 text-white/70">Betöltés...</p>
         </div>
       </div>
-      <div className="footer">
-        <p>Update this page by editing</p>
-        <a className="codeLink" href={fileURL}>
-          <code>app/(frontend)/page.tsx</code>
-        </a>
-      </div>
-    </div>
+    )
+  }
+
+  return (
+    <SmoothScrollWrapper>
+      <Hero siteSettings={siteSettings} />
+      <ServicesSection siteSettings={siteSettings} services={services} />
+      <PortfolioSection portfolioItems={portfolioItems} />
+      <PricingSection pricingItems={pricingItems} />
+      <ContactSection />
+      <Footer siteSettings={siteSettings} />
+    </SmoothScrollWrapper>
   )
 }

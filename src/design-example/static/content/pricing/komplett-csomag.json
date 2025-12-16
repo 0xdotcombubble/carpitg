@@ -1,0 +1,20 @@
+{
+	"id": "5",
+	"title": "Komplett Csomag",
+	"slug": "komplett-csomag",
+	"category": "Teljes szolgáltatás",
+	"description": "Teljes autóápolás belül és kívül",
+	"price": "75.000 Ft",
+	"duration": "2 nap",
+	"image": "/images/image05.jpg",
+	"order": 5,
+	"popular": true,
+	"features": [
+		"Teljes belső tisztítás",
+		"Teljes külső mosás",
+		"Polírozás",
+		"Wax bevonat",
+		"Kerámia bevonat"
+	],
+	"content": "Teljes autóápolás belül és kívül. A szolgáltatás magában foglalja a teljes belső tisztítást, külső mosást, polírozást, wax bevonatot és kerámia bevonatot."
+}

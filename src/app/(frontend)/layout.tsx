@@ -1,19 +1,67 @@
 import React from 'react'
-import './styles.css'
+import type { Metadata } from 'next'
+import './global.css'
 
-export const metadata = {
-  description: 'A blank template using Payload in a Next.js app.',
-  title: 'Payload Blank Template',
+export const metadata: Metadata = {
+  title: 'CarPit Garage - Professzionális Autóápolás',
+  description:
+    'Professzionális autókozmetika és detailing szolgáltatások Budapesten. Polírozás, kerámia bevonat, kárpittisztítás.',
+  keywords:
+    'autókozmetika, detailing, polírozás, kerámia bevonat, kárpittisztítás, Budapest, CarPit Garage',
+  authors: [{ name: 'CarPit Garage' }],
+  openGraph: {
+    title: 'CarPit Garage - Professzionális Autóápolás',
+    description:
+      'Professzionális autókozmetika és detailing szolgáltatások Budapesten. Polírozás, kerámia bevonat, kárpittisztítás.',
+    url: 'https://carpitgarage.hu',
+    siteName: 'CarPit Garage',
+    locale: 'hu_HU',
+    type: 'website',
+    images: [
+      {
+        url: '/logo.svg',
+        width: 1200,
+        height: 630,
+        alt: 'CarPit Garage Logo',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CarPit Garage - Professzionális Autóápolás',
+    description: 'Professzionális autókozmetika és detailing szolgáltatások Budapesten.',
+    images: ['/logo.svg'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/logo.svg',
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+  },
 }
 
-export default async function RootLayout(props: { children: React.ReactNode }) {
-  const { children } = props
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>
-        <main>{children}</main>
-      </body>
+    <html lang="hu" className="scroll-smooth">
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body className="bg-background text-foreground antialiased">{children}</body>
     </html>
   )
 }

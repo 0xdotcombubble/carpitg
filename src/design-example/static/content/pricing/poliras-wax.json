@@ -1,0 +1,20 @@
+{
+	"id": "4",
+	"title": "Polírozás és Wax",
+	"slug": "poliras-wax",
+	"category": "Festékápolás",
+	"description": "Teljes polírozás és prémium wax bevonat",
+	"price": "45.000 Ft",
+	"duration": "1 nap",
+	"image": "/images/image04.jpg",
+	"order": 4,
+	"popular": false,
+	"features": [
+		"Teljes polírozás",
+		"Prémium wax bevonat",
+		"Festék javítás",
+		"Fényjavítás",
+		"Vízhajtó hatás"
+	],
+	"content": "Teljes polírozás és prémium wax bevonat. A szolgáltatás magában foglalja a festék javítást, fényjavítást és vízhajtó hatású bevonat felvitelét."
+}
