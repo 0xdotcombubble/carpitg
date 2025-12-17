@@ -89,9 +89,11 @@ const Hero: React.FC<HeroProps> = ({ siteSettings }) => {
                   width={256}
                   height={256}
                   priority
+                  unoptimized={siteSettings.heroLogo.endsWith('.svg')}
                   className="h-28 sm:h-36 md:h-48 lg:h-56 xl:h-64 w-auto object-contain brightness-0 saturate-100"
                   style={{
-                    filter: 'invert(27%) sepia(96%) saturate(5471%) hue-rotate(355deg) brightness(104%) contrast(94%)'
+                    filter:
+                      'invert(27%) sepia(96%) saturate(5471%) hue-rotate(355deg) brightness(104%) contrast(94%)',
                   }}
                 />
               </div>

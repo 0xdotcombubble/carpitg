@@ -44,13 +44,14 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     return {
       ...siteSettings,
       heroBackgroundImage:
-        typeof siteSettings.heroBackgroundImage === 'object'
-          ? siteSettings.heroBackgroundImage?.url || '/background.jpg'
-          : '/background.jpg',
+        typeof siteSettings.heroBackgroundImage === 'object' &&
+        siteSettings.heroBackgroundImage !== null
+          ? (siteSettings.heroBackgroundImage as any)?.url || '/background.jpg'
+          : siteSettings.heroBackgroundImage || '/background.jpg',
       heroLogo:
-        typeof siteSettings.heroLogo === 'object'
-          ? siteSettings.heroLogo?.url || '/logo.svg'
-          : '/logo.svg',
+        typeof siteSettings.heroLogo === 'object' && siteSettings.heroLogo !== null
+          ? (siteSettings.heroLogo as any)?.url || '/logo.svg'
+          : siteSettings.heroLogo || '/logo.svg',
     } as SiteSettings
   } catch (error) {
     console.error('Error fetching site settings:', error)

@@ -28,7 +28,7 @@ const cloudflare =
 export default buildConfig({
   serverURL:
     process.env.NEXT_PUBLIC_URL ||
-    (isProduction ? 'https://carpitgarage.hu' : 'http://localhost:3000'),
+    (isProduction ? 'https://carpitg.raphael-varszegi.workers.dev' : 'http://localhost:3000'),
   admin: {
     user: Users.slug,
     importMap: {
