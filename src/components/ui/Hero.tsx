@@ -69,8 +69,8 @@ const Hero: React.FC<HeroProps> = ({ siteSettings }) => {
       )}
 
       {/* Premium gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/70 z-10"></div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10"></div>
+      <div className="absolute inset-0 bg-linear-to-br from-black/60 via-black/40 to-black/70 z-10"></div>
+      <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent z-10"></div>
 
       <div className="flex items-center justify-center h-full py-8 md:py-12 px-4 sm:px-6 md:px-12 relative z-20">
         <div className="max-w-6xl w-full flex flex-col items-center justify-center gap-3 md:gap-6 text-center">

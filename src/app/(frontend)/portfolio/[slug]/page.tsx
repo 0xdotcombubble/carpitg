@@ -144,7 +144,7 @@ export default async function PortfolioPage({ params }: { params: Promise<{ slug
               {metadata.services.map((service, index) => (
                 <li key={index} className="flex items-start">
                   <svg
-                    className="w-6 h-6 text-accent mr-3 mt-0.5 flex-shrink-0"
+                    className="w-6 h-6 text-accent mr-3 mt-0.5 shrink-0"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
