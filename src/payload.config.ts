@@ -26,6 +26,9 @@ const cloudflare =
     : await getCloudflareContext({ async: true })
 
 export default buildConfig({
+  serverURL:
+    process.env.NEXT_PUBLIC_URL ||
+    (isProduction ? 'https://carpitgarage.hu' : 'http://localhost:3000'),
   admin: {
     user: Users.slug,
     importMap: {
@@ -35,7 +38,7 @@ export default buildConfig({
   collections: [Users, Media, Services, Portfolio, Pricing],
   globals: [SiteSettings],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: process.env.PAYLOAD_SECRET || 'BUILD_TIME_SECRET_REPLACE_IN_PRODUCTION',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
@@ -43,7 +46,15 @@ export default buildConfig({
   plugins: [
     r2Storage({
       bucket: cloudflare.env.R2,
-      collections: { media: true },
+      collections: {
+        media: {
+          prefix: 'media',
+        },
+      },
+      config: {
+        // This will serve files through /api/media/file/{filename}
+        // which is handled by Payload's built-in file serving
+      },
     }),
   ],
 })

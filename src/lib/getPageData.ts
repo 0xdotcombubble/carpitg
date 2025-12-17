@@ -134,7 +134,11 @@ export async function getPortfolio(): Promise<PortfolioItem[]> {
         },
         vehicleInfo: item.vehicleInfo || {},
         services: Array.isArray(item.services)
-          ? item.services.map((s: any) => (typeof s === 'object' ? s.title || '' : String(s)))
+          ? item.services.map((s: unknown) =>
+              typeof s === 'object' && s !== null && 'title' in s
+                ? (s as { title: string }).title || ''
+                : String(s),
+            )
           : [],
       },
       content: '',
@@ -177,7 +181,11 @@ export async function getPricing(): Promise<PricingItem[]> {
         vehicleTypes: item.vehicleTypes || [],
         notes: item.notes,
         services: Array.isArray(item.services)
-          ? item.services.map((s: any) => (typeof s === 'object' ? s.title || '' : String(s)))
+          ? item.services.map((s: unknown) =>
+              typeof s === 'object' && s !== null && 'title' in s
+                ? (s as { title: string }).title || ''
+                : String(s),
+            )
           : [],
       },
       content: '',
@@ -278,7 +286,11 @@ export async function getPortfolioBySlug(slug: string): Promise<PortfolioItem | 
         },
         vehicleInfo: item.vehicleInfo || {},
         services: Array.isArray(item.services)
-          ? item.services.map((s: any) => (typeof s === 'object' ? s.title || '' : String(s)))
+          ? item.services.map((s: unknown) =>
+              typeof s === 'object' && s !== null && 'title' in s
+                ? (s as { title: string }).title || ''
+                : String(s),
+            )
           : [],
       },
       content: '',
@@ -328,7 +340,11 @@ export async function getPricingBySlug(slug: string): Promise<PricingItem | null
         vehicleTypes: item.vehicleTypes || [],
         notes: item.notes,
         services: Array.isArray(item.services)
-          ? item.services.map((s: any) => (typeof s === 'object' ? s.title || '' : String(s)))
+          ? item.services.map((s: unknown) =>
+              typeof s === 'object' && s !== null && 'title' in s
+                ? (s as { title: string }).title || ''
+                : String(s),
+            )
           : [],
       },
       content: '',

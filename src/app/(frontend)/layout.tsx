@@ -1,8 +1,14 @@
 import React from 'react'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './global.css'
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+}
+
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_URL || 'https://carpitgarage.hu'),
   title: 'CarPit Garage - Professzionális Autóápolás',
   description:
     'Professzionális autókozmetika és detailing szolgáltatások Budapesten. Polírozás, kerámia bevonat, kárpittisztítás.',
@@ -47,10 +53,6 @@ export const metadata: Metadata = {
     icon: '/favicon.ico',
     shortcut: '/favicon.ico',
     apple: '/logo.svg',
-  },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
   },
 }
 
