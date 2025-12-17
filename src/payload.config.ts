@@ -51,10 +51,6 @@ export default buildConfig({
           prefix: 'media',
         },
       },
-      config: {
-        // This will serve files through /api/media/file/{filename}
-        // which is handled by Payload's built-in file serving
-      },
     }),
   ],
 })
