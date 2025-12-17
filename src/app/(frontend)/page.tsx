@@ -20,7 +20,7 @@ export default async function HomePage() {
       <ServicesSection siteSettings={siteSettings} services={services} />
       <PortfolioSection portfolioItems={portfolioItems} />
       <PricingSection pricingItems={pricingItems} siteSettings={siteSettings} />
-      <ContactSection />
+      <ContactSection siteSettings={siteSettings} />
       <Footer siteSettings={siteSettings} />
     </SmoothScrollWrapper>
   )

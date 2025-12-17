@@ -175,8 +175,8 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
                       {/* Content Section */}
                       <div
                         className={`${
-                          !isClient || isMobile ? 'p-6 flex-1' : 'p-8 lg:p-12'
-                        } flex flex-col justify-between`}
+                          !isClient || isMobile ? 'p-6 pb-20 flex-1' : 'p-8 lg:p-12 pr-20'
+                        } flex flex-col justify-between relative`}
                       >
                         <div className="flex-1 flex flex-col justify-center">
                           {/* Desktop category - hidden on mobile since it's on image overlay */}
@@ -194,17 +194,15 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
 
                           <div className="w-16 h-0.5 bg-linear-to-r from-accent to-accent/30 mb-4 group-hover:w-24 transition-all duration-500"></div>
 
-                          <p className="text-white/70 font-light leading-relaxed text-base lg:text-lg mb-6">
+                          <p className="text-white/70 font-light leading-relaxed text-base lg:text-lg mb-6 pr-4">
                             {item.metadata.description}
                           </p>
                         </div>
 
-                        <div className="mt-6">
-                          <div className="absolute bottom-6 right-6 w-10 h-10 border border-accent/50 text-accent hover:bg-accent hover:text-white transition-all duration-300 flex items-center justify-center cursor-pointer">
-                            <span className="text-xl transform group-hover:rotate-45 transition-transform duration-300">
-                              →
-                            </span>
-                          </div>
+                        <div className="absolute bottom-6 right-6 w-10 h-10 border border-accent/50 text-accent hover:bg-accent hover:text-white transition-all duration-300 flex items-center justify-center cursor-pointer z-10">
+                          <span className="text-xl transform group-hover:rotate-45 transition-transform duration-300">
+                            →
+                          </span>
                         </div>
                       </div>
                     </div>

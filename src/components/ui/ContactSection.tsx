@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react'
 import { Mail, Phone, MapPin, Clock } from 'lucide-react'
+import Image from 'next/image'
+import { SiteSettings } from './types'
 
 interface ContactFormData {
   name: string
@@ -10,19 +12,23 @@ interface ContactFormData {
   message: string
 }
 
-const ContactSection: React.FC = () => {
+interface ContactSectionProps {
+  siteSettings: SiteSettings
+}
+
+const ContactSection: React.FC<ContactSectionProps> = ({ siteSettings }) => {
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
     phone: '',
-    message: ''
+    message: '',
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
   }
 
@@ -35,34 +41,38 @@ const ContactSection: React.FC = () => {
       name: '',
       email: '',
       phone: '',
-      message: ''
+      message: '',
     })
   }
 
   return (
-    <section id="contact" className="relative py-20 md:py-32 overflow-hidden md:bg-transparent bg-[#0D0D0D]">
-      {/* Mobile background - no bg-fixed to avoid iOS Safari issues */}
-      <div
-        className="md:hidden absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: 'url(\'/background.jpg\')' }}
-      ></div>
-      {/* Mobile overlay */}
-      <div className="md:hidden absolute inset-0 bg-black/80"></div>
+    <section
+      id="contact"
+      className="relative py-20 md:py-32 overflow-hidden md:bg-transparent bg-[#0D0D0D]"
+    >
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <Image
+          src={siteSettings.heroBackgroundImage}
+          alt="Contact Background"
+          fill
+          className="object-cover"
+        />
+      </div>
 
-      {/* Desktop background with bg-fixed */}
-      <div
-        className="hidden md:block absolute inset-0 bg-fixed bg-cover bg-center"
-        style={{ backgroundImage: 'url(\'/background.jpg\')' }}
-      ></div>
-      {/* Desktop overlay */}
-      <div className="hidden md:block absolute inset-0 bg-black/80"></div>
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/80"></div>
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div className="space-y-8">
             <div className="space-y-4">
-              <div className="text-accent text-lg md:text-xl font-semibold tracking-widest">KAPCSOLAT</div>
-              <h2 className="text-4xl md:text-5xl font-bold text-balance text-white">Foglalj időpontot most</h2>
+              <div className="text-accent text-lg md:text-xl font-semibold tracking-widest">
+                KAPCSOLAT
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-balance text-white">
+                Foglalj időpontot most
+              </h2>
               <p className="text-lg text-white/60 leading-relaxed">
                 Hívj fel vagy küldj üzenetet - szívesen segítünk az autód szépítésében.
               </p>
@@ -70,41 +80,47 @@ const ContactSection: React.FC = () => {
 
             <div className="space-y-6">
               <div className="flex gap-4">
-                <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
                   <Phone className="w-6 h-6 text-accent" />
                 </div>
                 <div>
                   <p className="font-semibold text-white">Telefon</p>
-                  <a href="tel:+36703339809" className="text-accent hover:text-accent/80">
-                    06 70 333 9809
+                  <a
+                    href={`tel:${siteSettings.phone}`}
+                    className="text-accent hover:text-accent/80"
+                  >
+                    {siteSettings.phone}
                   </a>
                 </div>
               </div>
 
               <div className="flex gap-4">
-                <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
                   <Mail className="w-6 h-6 text-accent" />
                 </div>
                 <div>
                   <p className="font-semibold text-white">Email</p>
-                  <a href="mailto:info@carpitgarage.hu" className="text-accent hover:text-accent/80">
-                    info@carpitgarage.hu
+                  <a
+                    href={`mailto:${siteSettings.email}`}
+                    className="text-accent hover:text-accent/80"
+                  >
+                    {siteSettings.email}
                   </a>
                 </div>
               </div>
 
               <div className="flex gap-4">
-                <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
                   <MapPin className="w-6 h-6 text-accent" />
                 </div>
                 <div>
                   <p className="font-semibold text-white">Cím</p>
-                  <p className="text-white/60">1172 Budapest, Cinkotai út 26.</p>
+                  <p className="text-white/60">{siteSettings.address}</p>
                 </div>
               </div>
 
               <div className="flex gap-4">
-                <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
                   <Clock className="w-6 h-6 text-accent" />
                 </div>
                 <div>
@@ -117,9 +133,14 @@ const ContactSection: React.FC = () => {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6 bg-[#1A1A1A] p-8 rounded-lg border border-white/10">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-6 bg-[#1A1A1A] p-8 rounded-lg border border-white/10"
+          >
             <div>
-              <label htmlFor="name" className="block text-sm font-semibold text-white mb-2">Név</label>
+              <label htmlFor="name" className="block text-sm font-semibold text-white mb-2">
+                Név
+              </label>
               <input
                 id="name"
                 name="name"
@@ -133,7 +154,9 @@ const ContactSection: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-white mb-2">Email</label>
+              <label htmlFor="email" className="block text-sm font-semibold text-white mb-2">
+                Email
+              </label>
               <input
                 id="email"
                 name="email"
@@ -147,7 +170,9 @@ const ContactSection: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-semibold text-white mb-2">Telefon</label>
+              <label htmlFor="phone" className="block text-sm font-semibold text-white mb-2">
+                Telefon
+              </label>
               <input
                 id="phone"
                 name="phone"
@@ -160,7 +185,9 @@ const ContactSection: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="message" className="block text-sm font-semibold text-white mb-2">Üzenet</label>
+              <label htmlFor="message" className="block text-sm font-semibold text-white mb-2">
+                Üzenet
+              </label>
               <textarea
                 id="message"
                 name="message"
