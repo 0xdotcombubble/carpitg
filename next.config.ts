@@ -1,22 +1,22 @@
 import { withPayload } from '@payloadcms/next/withPayload'
+import type { NextConfig } from 'next'
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
   // Your Next.js config here
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
+        protocol: 'https' as const,
         hostname: 'carpitgarage.hu',
         pathname: '/api/media/file/**',
       },
       {
-        protocol: 'https',
+        protocol: 'https' as const,
         hostname: 'carpitg.raphael-varszegi.workers.dev',
         pathname: '/api/media/file/**',
       },
       {
-        protocol: 'http',
+        protocol: 'http' as const,
         hostname: 'localhost',
         port: '3000',
         pathname: '/api/media/file/**',
