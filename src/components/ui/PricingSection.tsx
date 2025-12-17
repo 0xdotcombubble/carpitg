@@ -4,13 +4,14 @@ import React, { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Check } from 'lucide-react'
-import { PricingItem } from './types'
+import { PricingItem, SiteSettings } from './types'
 
 interface PricingSectionProps {
   pricingItems?: PricingItem[]
+  siteSettings: SiteSettings
 }
 
-const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [] }) => {
+const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [], siteSettings }) => {
   const [isClient, setIsClient] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
@@ -69,14 +70,14 @@ const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [] }) =>
             className="absolute inset-0 w-full h-[120%]"
             style={{ transform: `translateY(${parallaxY}px)` }}
           >
-            <Image src="/background.jpg" alt="Background" fill className="object-cover" />
+            <Image src={siteSettings.heroBackgroundImage} alt="Background" fill className="object-cover" />
           </div>
         )}
 
         {/* Mobile Background */}
         {isClient && isMobile && (
           <div className="absolute inset-0 w-full h-full">
-            <Image src="/background.jpg" alt="Background" fill className="object-cover" />
+            <Image src={siteSettings.heroBackgroundImage} alt="Background" fill className="object-cover" />
           </div>
         )}
 
