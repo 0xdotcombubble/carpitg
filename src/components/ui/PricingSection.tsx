@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState, useRef } from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
 import { Check } from 'lucide-react'
 import { PricingItem } from './types'
@@ -18,13 +19,13 @@ const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [] }) =>
 
   const getItemScale = (index: number): number => {
     if (!isClient || isMobile) {
-      return 1 - (index * 0.002)
+      return 1 - index * 0.002
     }
 
-    const targetScale = 1 - (index * 0.005)
+    const targetScale = 1 - index * 0.005
     const range = index * 0.15
     const progress = Math.max(0, Math.min(1, (scrollProgress - range) / (1 - range)))
-    return 1 - (progress * (1 - targetScale))
+    return 1 - progress * (1 - targetScale)
   }
 
   const handleScroll = () => {
@@ -68,24 +69,14 @@ const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [] }) =>
             className="absolute inset-0 w-full h-[120%]"
             style={{ transform: `translateY(${parallaxY}px)` }}
           >
-            <Image
-              src="/background.jpg"
-              alt="Background"
-              fill
-              className="object-cover"
-            />
+            <Image src="/background.jpg" alt="Background" fill className="object-cover" />
           </div>
         )}
 
         {/* Mobile Background */}
         {isClient && isMobile && (
           <div className="absolute inset-0 w-full h-full">
-            <Image
-              src="/background.jpg"
-              alt="Background"
-              fill
-              className="object-cover"
-            />
+            <Image src="/background.jpg" alt="Background" fill className="object-cover" />
           </div>
         )}
 
@@ -123,16 +114,18 @@ const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [] }) =>
               key={item.slug}
               style={{
                 transform: `scale(${scale})`,
-                top: !isClient || isMobile ? `${i * 20}px` : `calc(-2vh + ${i * 25}px)`
+                top: !isClient || isMobile ? `${i * 20}px` : `calc(-2vh + ${i * 25}px)`,
               }}
               className={`flex ${
                 !isClient || isMobile ? 'min-h-[450px]' : 'md:h-screen'
               } items-center justify-center sticky`}
             >
               <div className="max-w-4xl mx-auto px-4 md:px-8 w-full">
-                <div className={`relative bg-[#1A1A1A] border border-white/10 hover:border-accent transition-all duration-500 overflow-hidden ${
-                  i % 2 === 0 ? 'md:rotate-[0.5deg]' : 'md:-rotate-[0.5deg]'
-                } group cursor-pointer`}>
+                <div
+                  className={`relative bg-[#1A1A1A] border border-white/10 hover:border-accent transition-all duration-500 overflow-hidden ${
+                    i % 2 === 0 ? 'md:rotate-[0.5deg]' : 'md:-rotate-[0.5deg]'
+                  } group cursor-pointer`}
+                >
                   {/* Corner accent element */}
                   <div className="absolute top-6 right-6 z-10">
                     <div className="w-12 h-12 border-2 border-accent/30 group-hover:border-accent/60 transition-all duration-500 flex items-center justify-center">
@@ -148,9 +141,11 @@ const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [] }) =>
                     </div>
                   )}
 
-                  <div className={`${
-                    !isClient || isMobile ? 'p-6 min-h-[400px]' : 'p-8 lg:p-12 min-h-[550px]'
-                  } flex flex-col justify-between`}>
+                  <div
+                    className={`${
+                      !isClient || isMobile ? 'p-6 min-h-[400px]' : 'p-8 lg:p-12 min-h-[550px]'
+                    } flex flex-col justify-between`}
+                  >
                     <div className="flex-1 flex flex-col justify-center">
                       <div className="mb-4">
                         <span className="text-accent text-sm font-medium tracking-wide uppercase">
@@ -165,7 +160,9 @@ const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [] }) =>
                       <p className="text-white/60 mb-6 text-lg">{item.metadata.description}</p>
 
                       <div className="flex items-baseline gap-2 mb-8">
-                        <p className="text-5xl lg:text-6xl font-bold text-accent">{item.metadata.price}</p>
+                        <p className="text-5xl lg:text-6xl font-bold text-accent">
+                          {item.metadata.price}
+                        </p>
                         {item.metadata.duration && (
                           <span className="text-white/50 text-sm">/ {item.metadata.duration}</span>
                         )}
@@ -176,9 +173,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [] }) =>
                         {item.metadata.features.map((feature, index) => (
                           <div key={index} className="flex items-start gap-3">
                             <Check className="w-6 h-6 text-accent flex-shrink-0 mt-0.5" />
-                            <span className="text-white text-lg">
-                              {feature}
-                            </span>
+                            <span className="text-white text-lg">{feature}</span>
                           </div>
                         ))}
                       </div>
@@ -186,12 +181,12 @@ const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [] }) =>
 
                     {/* CTA button */}
                     <div className="mt-8">
-                      <a
+                      <Link
                         href={`/pricing/${item.slug}`}
                         className="w-full py-4 px-8 bg-accent text-white font-semibold text-lg hover:bg-accent/90 transition-all duration-300 text-center block relative overflow-hidden group"
                       >
                         <span className="relative z-10">Részletek</span>
-                      </a>
+                      </Link>
                     </div>
 
                     {/* Hover glow effect */}

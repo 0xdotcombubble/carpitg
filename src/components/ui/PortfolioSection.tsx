@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState, useRef } from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
 import { PortfolioItem } from './types'
 
@@ -15,20 +16,24 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
   const [scrollProgress, setScrollProgress] = useState(0)
   const containerRef = useRef<HTMLElement>(null)
 
-  const categories = ['Összes', ...Array.from(new Set(portfolioItems.map(item => item.metadata.category)))]
-  const filteredItems = selectedCategory === 'Összes'
-    ? portfolioItems
-    : portfolioItems.filter(item => item.metadata.category === selectedCategory)
+  const categories = [
+    'Összes',
+    ...Array.from(new Set(portfolioItems.map((item) => item.metadata.category))),
+  ]
+  const filteredItems =
+    selectedCategory === 'Összes'
+      ? portfolioItems
+      : portfolioItems.filter((item) => item.metadata.category === selectedCategory)
 
   const getItemScale = (index: number): number => {
     if (!isClient || isMobile) {
-      return 1 - (index * 0.002)
+      return 1 - index * 0.002
     }
 
-    const targetScale = 1 - (index * 0.005)
+    const targetScale = 1 - index * 0.005
     const range = index * 0.15
     const progress = Math.max(0, Math.min(1, (scrollProgress - range) / (1 - range)))
-    return 1 - (progress * (1 - targetScale))
+    return 1 - progress * (1 - targetScale)
   }
 
   const handleScroll = () => {
@@ -80,7 +85,8 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
             </h2>
 
             <p className="text-lg text-white/70 font-light leading-relaxed max-w-2xl mx-auto">
-              Büszkék vagyunk minden elvégzett munkánkra. Itt láthatod legfrissebb projektjeinket és az elégedett ügyfelek autóit.
+              Büszkék vagyunk minden elvégzett munkánkra. Itt láthatod legfrissebb projektjeinket és
+              az elégedett ügyfelek autóit.
             </p>
 
             <div className="w-32 h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent mx-auto mt-8"></div>
@@ -114,17 +120,19 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
               key={item.slug}
               style={{
                 transform: `scale(${scale})`,
-                top: !isClient || isMobile ? `${i * 20}px` : `calc(-2vh + ${i * 25}px)`
+                top: !isClient || isMobile ? `${i * 20}px` : `calc(-2vh + ${i * 25}px)`,
               }}
               className={`flex ${
                 !isClient || isMobile ? 'min-h-[400px]' : 'md:h-screen'
               } items-center justify-center sticky`}
             >
               <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
-                <a href={`/portfolio/${item.slug}`} className="block">
-                  <div className={`relative bg-[#1A1A1A] border border-white/20 hover:border-accent/50 transition-all duration-500 overflow-hidden ${
-                    i % 2 === 0 ? 'md:rotate-[0.5deg]' : 'md:-rotate-[0.5deg]'
-                  } group cursor-pointer`}>
+                <Link href={`/portfolio/${item.slug}`} className="block">
+                  <div
+                    className={`relative bg-[#1A1A1A] border border-white/20 hover:border-accent/50 transition-all duration-500 overflow-hidden ${
+                      i % 2 === 0 ? 'md:rotate-[0.5deg]' : 'md:-rotate-[0.5deg]'
+                    } group cursor-pointer`}
+                  >
                     {/* Corner accent element */}
                     <div className="absolute top-6 right-6 z-10">
                       <div className="w-12 h-12 border-2 border-accent/30 group-hover:border-accent/60 transition-all duration-500 flex items-center justify-center">
@@ -132,13 +140,19 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
                       </div>
                     </div>
 
-                    <div className={`${
-                      !isClient || isMobile ? 'flex flex-col min-h-[500px]' : 'grid grid-cols-1 lg:grid-cols-2 min-h-[450px]'
-                    }`}>
+                    <div
+                      className={`${
+                        !isClient || isMobile
+                          ? 'flex flex-col min-h-[500px]'
+                          : 'grid grid-cols-1 lg:grid-cols-2 min-h-[450px]'
+                      }`}
+                    >
                       {/* Image Section */}
-                      <div className={`relative overflow-hidden ${
-                        !isClient || isMobile ? 'h-64 flex-shrink-0' : ''
-                      }`}>
+                      <div
+                        className={`relative overflow-hidden ${
+                          !isClient || isMobile ? 'h-64 flex-shrink-0' : ''
+                        }`}
+                      >
                         <Image
                           src={item.metadata.image || ''}
                           alt={item.metadata.title}
@@ -159,9 +173,11 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
                       </div>
 
                       {/* Content Section */}
-                      <div className={`${
-                        !isClient || isMobile ? 'p-6 flex-1' : 'p-8 lg:p-12'
-                      } flex flex-col justify-between`}>
+                      <div
+                        className={`${
+                          !isClient || isMobile ? 'p-6 flex-1' : 'p-8 lg:p-12'
+                        } flex flex-col justify-between`}
+                      >
                         <div className="flex-1 flex flex-col justify-center">
                           {/* Desktop category - hidden on mobile since it's on image overlay */}
                           {(!isClient || !isMobile) && (
@@ -185,7 +201,9 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
 
                         <div className="mt-6">
                           <div className="absolute bottom-6 right-6 w-10 h-10 border border-accent/50 text-accent hover:bg-accent hover:text-white transition-all duration-300 flex items-center justify-center cursor-pointer">
-                            <span className="text-xl transform group-hover:rotate-45 transition-transform duration-300">→</span>
+                            <span className="text-xl transform group-hover:rotate-45 transition-transform duration-300">
+                              →
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -194,7 +212,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
                     <div className="absolute inset-0 bg-gradient-to-t from-accent/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                     <div className="absolute bottom-0 right-0 w-32 h-32 border-t-2 border-l-2 border-accent/20 group-hover:border-accent/40 transition-colors duration-500"></div>
                   </div>
-                </a>
+                </Link>
               </div>
             </div>
           )
@@ -210,7 +228,8 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
             </h3>
 
             <p className="text-white/70 font-light leading-relaxed mb-8">
-              Minden autó egyedi történet. Nézd meg, hogyan változtattuk át ügyfeleink járműveit valódi ékszerekké.
+              Minden autó egyedi történet. Nézd meg, hogyan változtattuk át ügyfeleink járműveit
+              valódi ékszerekké.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

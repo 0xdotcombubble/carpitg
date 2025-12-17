@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState, useRef } from 'react'
+import Link from 'next/link'
 import { ServiceItem, SiteSettings } from './types'
 
 interface ServicesSectionProps {
@@ -46,18 +47,14 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ siteSettings, service
           0,
           Math.min(
             1,
-            (window.innerHeight - containerRect.top) /
-              (window.innerHeight + containerRect.height)
-          )
+            (window.innerHeight - containerRect.top) / (window.innerHeight + containerRect.height),
+          ),
         )
       : 0
 
     const targetScale = 1 - index * 0.005
     const range = [index * 0.15, 1]
-    const progress = Math.max(
-      0,
-      Math.min(1, (scrollProgress - range[0]) / (range[1] - range[0]))
-    )
+    const progress = Math.max(0, Math.min(1, (scrollProgress - range[0]) / (range[1] - range[0])))
     return 1 + progress * (targetScale - 1)
   }
 
@@ -100,21 +97,17 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ siteSettings, service
             key={service.slug}
             style={{
               transform: `scale(${getCardScale(i)})`,
-              top: getCardTop(i)
+              top: getCardTop(i),
             }}
             className={`flex ${
               isMobile ? 'min-h-[400px]' : 'md:h-screen'
             } items-center justify-center sticky`}
           >
             <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
-              <a href={`/services/${service.metadata.slug}`} className="block">
+              <Link href={`/services/${service.metadata.slug}`} className="block">
                 <div
                   className={`group relative bg-[#1A1A1A] border border-white/20 hover:border-accent/50 transition-all duration-500 overflow-hidden shadow-lg hover:shadow-xl cursor-pointer ${
-                    isMobile
-                      ? 'mx-4'
-                      : i % 2 === 0
-                        ? 'md:rotate-[0.5deg]'
-                        : 'md:-rotate-[0.5deg]'
+                    isMobile ? 'mx-4' : i % 2 === 0 ? 'md:rotate-[0.5deg]' : 'md:-rotate-[0.5deg]'
                   }`}
                 >
                   {/* Corner accent element */}
@@ -126,9 +119,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ siteSettings, service
 
                   <div
                     className={`flex flex-col justify-between ${
-                      isMobile
-                        ? 'p-4 min-h-[300px]'
-                        : 'p-6 md:p-8 lg:p-12 min-h-[400px]'
+                      isMobile ? 'p-4 min-h-[300px]' : 'p-6 md:p-8 lg:p-12 min-h-[400px]'
                     }`}
                   >
                     <div className="flex-1 flex flex-col justify-center">
@@ -161,7 +152,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ siteSettings, service
                   <div className="absolute inset-0 bg-gradient-to-t from-accent/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                   <div className="absolute bottom-0 right-0 w-32 h-32 border-t-2 border-l-2 border-accent/20 group-hover:border-accent/40 transition-colors duration-500"></div>
                 </div>
-              </a>
+              </Link>
             </div>
           </div>
         ))}
@@ -177,8 +168,8 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ siteSettings, service
                   Egyedi igények?
                 </h3>
                 <p className="text-white/70 font-light leading-relaxed">
-                  Minden autó különleges. Kérj személyre szabott ajánlatot, hogy autód a
-                  legjobb kezelést kapja.
+                  Minden autó különleges. Kérj személyre szabott ajánlatot, hogy autód a legjobb
+                  kezelést kapja.
                 </p>
               </div>
               <div className="lg:text-right">
