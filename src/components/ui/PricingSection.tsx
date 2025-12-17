@@ -94,7 +94,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [] }) =>
             </div>
 
             <h2 className="text-4xl md:text-6xl font-bold text-balance">
-              <span className="text-white">Transzparens</span>
+              <span className="text-white">Transzparens </span>
               <span className="text-accent">Árképzés</span>
             </h2>
 
@@ -169,10 +169,10 @@ const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [] }) =>
                       </div>
 
                       {/* Feature list */}
-                      <div className="space-y-4 flex-grow mb-8">
+                      <div className="space-y-4 grow mb-8">
                         {item.metadata.features.map((feature, index) => (
                           <div key={index} className="flex items-start gap-3">
-                            <Check className="w-6 h-6 text-accent flex-shrink-0 mt-0.5" />
+                            <Check className="w-6 h-6 text-accent shrink-0 mt-0.5" />
                             <span className="text-white text-lg">{feature}</span>
                           </div>
                         ))}

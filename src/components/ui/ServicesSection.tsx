@@ -126,7 +126,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ siteSettings, service
                       <h3 className="font-display text-2xl lg:text-4xl font-bold text-white mb-4 group-hover:text-accent transition-colors duration-300">
                         {service.metadata.title}
                       </h3>
-                      <div className="w-16 h-[2px] bg-gradient-to-r from-accent to-accent/30 mb-4 group-hover:w-24 transition-all duration-500"></div>
+                      <div className="w-16 h-0.5 bg-linear-to-r from-accent to-accent/30 mb-4 group-hover:w-24 transition-all duration-500"></div>
                       <p className="text-white/70 font-light leading-relaxed text-base lg:text-lg mb-6">
                         {service.metadata.description}
                       </p>

@@ -29,10 +29,11 @@ const Footer: React.FC<FooterProps> = ({ siteSettings }) => {
           <div>
             <div className="flex justify-center md:justify-start mb-4">
               <Image
-                src="/logo.svg"
+                src={siteSettings.heroLogo || '/logo.svg'}
                 alt="CarPit Garage Logo"
                 width={64}
                 height={64}
+                unoptimized={siteSettings.heroLogo?.endsWith('.svg')}
                 className="h-12 sm:h-14 md:h-16 w-auto object-contain brightness-0 saturate-100"
                 style={{
                   filter:

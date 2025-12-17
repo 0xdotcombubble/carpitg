@@ -89,7 +89,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
               az elégedett ügyfelek autóit.
             </p>
 
-            <div className="w-32 h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent mx-auto mt-8"></div>
+            <div className="w-32 h-0.5 bg-linear-to-r from-transparent via-accent to-transparent mx-auto mt-8"></div>
           </div>
 
           {/* Category Filter */}
@@ -150,7 +150,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
                       {/* Image Section */}
                       <div
                         className={`relative overflow-hidden ${
-                          !isClient || isMobile ? 'h-64 flex-shrink-0' : ''
+                          !isClient || isMobile ? 'h-64 shrink-0' : ''
                         }`}
                       >
                         <Image
@@ -192,7 +192,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
                             {item.metadata.title}
                           </h3>
 
-                          <div className="w-16 h-[2px] bg-gradient-to-r from-accent to-accent/30 mb-4 group-hover:w-24 transition-all duration-500"></div>
+                          <div className="w-16 h-0.5 bg-linear-to-r from-accent to-accent/30 mb-4 group-hover:w-24 transition-all duration-500"></div>
 
                           <p className="text-white/70 font-light leading-relaxed text-base lg:text-lg mb-6">
                             {item.metadata.description}
@@ -209,7 +209,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
                       </div>
                     </div>
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-accent/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                    <div className="absolute inset-0 bg-linear-to-r from-accent/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                     <div className="absolute bottom-0 right-0 w-32 h-32 border-t-2 border-l-2 border-accent/20 group-hover:border-accent/40 transition-colors duration-500"></div>
                   </div>
                 </Link>
@@ -222,7 +222,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
       {/* Footer Section */}
       <div className="py-24 md:py-32 relative">
         <div className="max-w-7xl mx-auto px-6 md:px-12 relative">
-          <div className="bg-gradient-to-r from-[#1A1A1A]/20 to-[#1A1A1A]/10 border border-white/10 p-8 lg:p-12 backdrop-blur-sm relative overflow-hidden">
+          <div className="bg-linear-to-r from-[#1A1A1A]/20 to-[#1A1A1A]/10 border border-white/10 p-8 lg:p-12 backdrop-blur-sm relative overflow-hidden">
             <h3 className="font-display text-2xl lg:text-3xl font-bold text-white mb-4">
               Inspirálódj munkáinkból!
             </h3>
@@ -244,7 +244,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
                 href="tel:+36703339809"
                 className="px-8 py-4 border border-white/30 text-white hover:border-accent hover:text-accent font-medium transition-all duration-300 flex items-center gap-2"
               >
-                <span>06 70 333 9809</span>
+                <span>+36 70 333 9809</span>
                 <span>📞</span>
               </a>
             </div>
