@@ -11,62 +11,62 @@ export const SiteSettings: GlobalConfig = {
   },
   hooks: {
     afterChange: [
-      async ({ doc }) => {
-        // Return immediately without blocking
+      ({ doc }) => {
+        // Run vCard generation in background without awaiting
+        ;(async () => {
+          try {
+            // Transform the document to match SiteSettings interface
+            const settings = {
+              heroTitle: doc.heroTitle || '',
+              heroSubtitle: doc.heroSubtitle || '',
+              heroDescription: doc.heroDescription || '',
+              heroBackgroundImage:
+                typeof doc.heroBackgroundImage === 'object'
+                  ? doc.heroBackgroundImage?.url || ''
+                  : doc.heroBackgroundImage || '',
+              heroLogo:
+                typeof doc.heroLogo === 'object' ? doc.heroLogo?.url || '' : doc.heroLogo || '',
+              portfolioTitle: doc.portfolioTitle || '',
+              portfolioSubtitle: doc.portfolioSubtitle || '',
+              servicesTitle: doc.servicesTitle || '',
+              servicesSubtitle: doc.servicesSubtitle || '',
+              pricingTitle: doc.pricingTitle || '',
+              pricingSubtitle: doc.pricingSubtitle || '',
+              pricingNote: doc.pricingNote || '',
+              phone: doc.phone || '',
+              email: doc.email || '',
+              address: doc.address || '',
+              instagram: doc.instagram || '',
+              facebook: doc.facebook || '',
+              vcardCompanyName: doc.vcardCompanyName || 'CarPit Garage',
+              vcardJobTitle: doc.vcardJobTitle || 'Professzionális Autókozmetika és Detailing',
+              vcardWebsite: doc.vcardWebsite || 'https://carpitgarage.hu',
+              vcardPhoto:
+                typeof doc.vcardPhoto === 'object' && doc.vcardPhoto !== null
+                  ? doc.vcardPhoto?.url || ''
+                  : doc.vcardPhoto || '',
+              vcardIncludeInstagram: doc.vcardIncludeInstagram ?? true,
+              vcardIncludeFacebook: doc.vcardIncludeFacebook ?? true,
+            }
+
+            // Generate vCard content
+            const vcardContent = generateVCard(settings)
+
+            // Upload to R2
+            const vcardUrl = await uploadVCardToR2(vcardContent)
+
+            if (vcardUrl) {
+              console.log('✓ vCard successfully generated and uploaded to R2:', vcardUrl)
+            } else {
+              console.error('✗ Failed to upload vCard to R2')
+            }
+          } catch (error) {
+            console.error('Error in SiteSettings afterChange hook:', error)
+          }
+        })()
+
+        // Return immediately to allow save to complete
         return doc
-
-        // Commented out temporarily to debug freezing issue
-        /* try {
-          // Transform the document to match SiteSettings interface
-          const settings = {
-            heroTitle: doc.heroTitle || '',
-            heroSubtitle: doc.heroSubtitle || '',
-            heroDescription: doc.heroDescription || '',
-            heroBackgroundImage:
-              typeof doc.heroBackgroundImage === 'object'
-                ? doc.heroBackgroundImage?.url || ''
-                : doc.heroBackgroundImage || '',
-            heroLogo:
-              typeof doc.heroLogo === 'object' ? doc.heroLogo?.url || '' : doc.heroLogo || '',
-            portfolioTitle: doc.portfolioTitle || '',
-            portfolioSubtitle: doc.portfolioSubtitle || '',
-            servicesTitle: doc.servicesTitle || '',
-            servicesSubtitle: doc.servicesSubtitle || '',
-            pricingTitle: doc.pricingTitle || '',
-            pricingSubtitle: doc.pricingSubtitle || '',
-            pricingNote: doc.pricingNote || '',
-            phone: doc.phone || '',
-            email: doc.email || '',
-            address: doc.address || '',
-            instagram: doc.instagram || '',
-            facebook: doc.facebook || '',
-            vcardCompanyName: doc.vcardCompanyName || 'CarPit Garage',
-            vcardJobTitle: doc.vcardJobTitle || 'Professzionális Autókozmetika és Detailing',
-            vcardWebsite: doc.vcardWebsite || 'https://carpitgarage.hu',
-            vcardPhoto:
-              typeof doc.vcardPhoto === 'object' && doc.vcardPhoto !== null
-                ? doc.vcardPhoto?.url || ''
-                : doc.vcardPhoto || '',
-            vcardIncludeInstagram: doc.vcardIncludeInstagram ?? true,
-            vcardIncludeFacebook: doc.vcardIncludeFacebook ?? true,
-          }
-
-          // Generate vCard content
-          const vcardContent = generateVCard(settings)
-
-          // Upload to R2
-          const vcardUrl = await uploadVCardToR2(vcardContent)
-
-          if (vcardUrl) {
-            console.log('✓ vCard successfully generated and uploaded to R2:', vcardUrl)
-          } else {
-            console.error('✗ Failed to upload vCard to R2')
-          }
-        } catch (error) {
-          console.error('Error in SiteSettings afterChange hook:', error)
-        }
-
-        return doc */
       },
     ],
   },
