@@ -12,7 +12,11 @@ export const SiteSettings: GlobalConfig = {
   hooks: {
     afterChange: [
       async ({ doc }) => {
-        try {
+        // Return immediately without blocking
+        return doc
+
+        // Commented out temporarily to debug freezing issue
+        /* try {
           // Transform the document to match SiteSettings interface
           const settings = {
             heroTitle: doc.heroTitle || '',
@@ -62,7 +66,7 @@ export const SiteSettings: GlobalConfig = {
           console.error('Error in SiteSettings afterChange hook:', error)
         }
 
-        return doc
+        return doc */
       },
     ],
   },
