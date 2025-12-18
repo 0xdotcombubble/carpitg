@@ -568,30 +568,6 @@ export interface SiteSetting {
   address: string;
   instagram?: string | null;
   facebook?: string | null;
-  /**
-   * Company name shown in the vCard
-   */
-  vcardCompanyName?: string | null;
-  /**
-   * Business description or job title
-   */
-  vcardJobTitle?: string | null;
-  /**
-   * Website URL for the vCard
-   */
-  vcardWebsite?: string | null;
-  /**
-   * Image/logo shown in contact apps (recommended: square image, at least 256x256px)
-   */
-  vcardPhoto?: (number | null) | Media;
-  /**
-   * Add Instagram to vCard
-   */
-  vcardIncludeInstagram?: boolean | null;
-  /**
-   * Add Facebook to vCard
-   */
-  vcardIncludeFacebook?: boolean | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -617,12 +593,6 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   address?: T;
   instagram?: T;
   facebook?: T;
-  vcardCompanyName?: T;
-  vcardJobTitle?: T;
-  vcardWebsite?: T;
-  vcardPhoto?: T;
-  vcardIncludeInstagram?: T;
-  vcardIncludeFacebook?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

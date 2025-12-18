@@ -1,8 +1,6 @@
 import { getPayload } from 'payload'
 import config from '@/payload.config'
 import type { SiteSettings, ServiceItem, PortfolioItem, PricingItem } from '@/components/ui/types'
-import { generateVCard } from './generateVCard'
-import { uploadVCardToR2 } from './uploadVCardToR2'
 
 // Default site settings fallback
 const defaultSiteSettings: SiteSettings = {
@@ -27,13 +25,6 @@ const defaultSiteSettings: SiteSettings = {
   address: '1172 Budapest\nCinkotai út 26.',
   instagram: 'https://www.instagram.com/carpit_grg',
   facebook: 'https://www.facebook.com/share/16mtfkk7VR/',
-  vcardUrl: '/api/media/file/contact.vcf',
-  vcardCompanyName: 'CarPit Garage',
-  vcardJobTitle: 'Professzionális Autókozmetika és Detailing',
-  vcardWebsite: 'https://carpitgarage.hu',
-  vcardPhoto: '',
-  vcardIncludeInstagram: true,
-  vcardIncludeFacebook: true,
 }
 
 /**
@@ -61,28 +52,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
         typeof siteSettings.heroLogo === 'object' && siteSettings.heroLogo !== null
           ? (siteSettings.heroLogo as any)?.url || '/logo.svg'
           : siteSettings.heroLogo || '/logo.svg',
-      vcardPhoto:
-        typeof siteSettings.vcardPhoto === 'object' && siteSettings.vcardPhoto !== null
-          ? (siteSettings.vcardPhoto as any)?.url || ''
-          : siteSettings.vcardPhoto || '',
-      vcardUrl: '/api/media/file/contact.vcf', // Static vCard URL
-      vcardCompanyName: siteSettings.vcardCompanyName || 'CarPit Garage',
-      vcardJobTitle: siteSettings.vcardJobTitle || 'Professzionális Autókozmetika és Detailing',
-      vcardWebsite: siteSettings.vcardWebsite || 'https://carpitgarage.hu',
-      vcardIncludeInstagram: siteSettings.vcardIncludeInstagram ?? true,
-      vcardIncludeFacebook: siteSettings.vcardIncludeFacebook ?? true,
     } as SiteSettings
-
-    // Generate and upload vCard on page load (works in frontend context)
-    try {
-      const vcardContent = generateVCard(transformedSettings)
-      const vcardUrl = await uploadVCardToR2(vcardContent)
-      if (vcardUrl) {
-        console.log('✓ vCard generated and uploaded on page load')
-      }
-    } catch (error) {
-      console.warn('Could not generate vCard on page load:', error)
-    }
 
     return transformedSettings
   } catch (error) {

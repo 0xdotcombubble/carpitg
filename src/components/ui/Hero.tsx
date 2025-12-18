@@ -114,14 +114,7 @@ const Hero: React.FC<HeroProps> = ({ siteSettings }) => {
           {/* Call-to-action buttons */}
           <div className="flex flex-col w-full max-w-md mx-auto gap-3 sm:max-w-none sm:flex-row sm:justify-center sm:gap-4 mt-2 md:mt-3 px-4">
             <a
-              href={
-                isClient && isMobile && siteSettings.vcardUrl
-                  ? siteSettings.vcardUrl
-                  : `tel:${siteSettings.phone}`
-              }
-              download={
-                isClient && isMobile && siteSettings.vcardUrl ? 'CarPit-Garage.vcf' : undefined
-              }
+              href={`tel:${siteSettings.phone}`}
               className="group px-8 sm:px-10 py-4 sm:py-5 bg-accent text-white font-semibold text-base sm:text-lg border-2 border-accent hover:bg-transparent hover:text-accent transition-all duration-300 flex items-center justify-center gap-3 shadow-2xl hover:shadow-accent/20 w-full sm:w-auto"
             >
               <span>Kapcsolat</span>

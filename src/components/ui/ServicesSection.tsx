@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState, useRef } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import { ServiceItem, SiteSettings } from './types'
 
@@ -10,72 +10,8 @@ interface ServicesSectionProps {
 }
 
 const ServicesSection: React.FC<ServicesSectionProps> = ({ siteSettings, services = [] }) => {
-  const [isMobile, setIsMobile] = useState(false)
-  const [isClient, setIsClient] = useState(false)
-  const [cardScales, setCardScales] = useState<number[]>([])
-  const containerRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    setIsClient(true)
-    // Initialize card scales
-    setCardScales(services.map((_, i) => 1 - i * 0.002))
-
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-
-    const handleScroll = () => {
-      if (window.innerWidth < 768) return // Skip on mobile
-
-      const containerRect = containerRef.current?.getBoundingClientRect()
-      if (!containerRect) return
-
-      const scrollProgress = Math.max(
-        0,
-        Math.min(
-          1,
-          (window.innerHeight - containerRect.top) / (window.innerHeight + containerRect.height),
-        ),
-      )
-
-      const newScales = services.map((_, index) => {
-        const targetScale = 1 - index * 0.005
-        const range = [index * 0.15, 1]
-        const progress = Math.max(
-          0,
-          Math.min(1, (scrollProgress - range[0]) / (range[1] - range[0])),
-        )
-        return 1 + progress * (targetScale - 1)
-      })
-
-      setCardScales(newScales)
-    }
-
-    checkMobile()
-    handleScroll() // Initial calculation
-
-    window.addEventListener('resize', checkMobile)
-    window.addEventListener('scroll', handleScroll, { passive: true })
-
-    return () => {
-      window.removeEventListener('resize', checkMobile)
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [services])
-
-  const getCardScale = (index: number): number => {
-    if (!isClient || isMobile) {
-      return 1 - index * 0.002
-    }
-    return cardScales[index] || 1
-  }
-
-  const getCardTop = (index: number): string => {
-    return isMobile ? `${index * 20}px` : `calc(-2vh + ${index * 25}px)`
-  }
-
   return (
-    <section ref={containerRef} id="services" className="relative md:bg-transparent bg-background">
+    <section id="services" className="relative md:bg-transparent bg-background">
       {/* Header Section */}
       <div className="py-24 md:py-32 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 md:px-12 relative">
@@ -108,18 +44,15 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ siteSettings, service
           <div
             key={service.slug}
             style={{
-              transform: `scale(${getCardScale(i)})`,
-              top: getCardTop(i),
+              top: `calc(-2vh + ${i * 25}px)`,
             }}
-            className={`flex ${
-              isMobile ? 'min-h-[400px]' : 'md:h-screen'
-            } items-center justify-center sticky`}
+            className="flex md:h-screen min-h-[400px] items-center justify-center sticky"
           >
             <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
               <Link href={`/services/${service.metadata.slug}`} className="block">
                 <div
                   className={`group relative bg-[#1A1A1A] border border-white/20 hover:border-accent/50 transition-all duration-500 overflow-hidden shadow-lg hover:shadow-xl cursor-pointer ${
-                    isMobile ? 'mx-4' : i % 2 === 0 ? 'md:rotate-[0.5deg]' : 'md:-rotate-[0.5deg]'
+                    i % 2 === 0 ? 'md:rotate-[0.5deg]' : 'md:-rotate-[0.5deg]'
                   }`}
                 >
                   {/* Corner accent element */}
@@ -129,11 +62,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ siteSettings, service
                     </div>
                   </div>
 
-                  <div
-                    className={`flex flex-col justify-between ${
-                      isMobile ? 'p-4 min-h-[300px]' : 'p-6 md:p-8 lg:p-12 min-h-[400px]'
-                    }`}
-                  >
+                  <div className="flex flex-col justify-between p-6 md:p-8 lg:p-12 min-h-[400px]">
                     <div className="flex-1 flex flex-col justify-center">
                       <h3 className="font-display text-2xl lg:text-4xl font-bold text-white mb-4 group-hover:text-accent transition-colors duration-300">
                         {service.metadata.title}

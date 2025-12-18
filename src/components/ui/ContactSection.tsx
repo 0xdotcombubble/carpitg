@@ -180,7 +180,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ siteSettings }) => {
                 value={formData.phone}
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 bg-[#0D0D0D] border border-white/20 rounded-sm text-white placeholder-white/50 focus:border-accent focus:outline-none transition"
-                placeholder="06 70 XXX XXXX"
+                placeholder="+36 00 XXX XXXX"
               />
             </div>
 
