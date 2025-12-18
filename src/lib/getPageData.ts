@@ -40,14 +40,17 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       depth: 2, // Include related media
     })
 
-    // Transform image uploads to include URLs
+    // Transform image uploads to include URLs and blur data
+    const heroBackgroundImageObj =
+      typeof siteSettings.heroBackgroundImage === 'object' &&
+      siteSettings.heroBackgroundImage !== null
+        ? (siteSettings.heroBackgroundImage as any)
+        : null
+
     const transformedSettings = {
       ...siteSettings,
-      heroBackgroundImage:
-        typeof siteSettings.heroBackgroundImage === 'object' &&
-        siteSettings.heroBackgroundImage !== null
-          ? (siteSettings.heroBackgroundImage as any)?.url || '/background.jpg'
-          : siteSettings.heroBackgroundImage || '/background.jpg',
+      heroBackgroundImage: heroBackgroundImageObj?.url || '/background.jpg',
+      heroBackgroundImageBlur: heroBackgroundImageObj?.blurDataURL || undefined,
       heroLogo:
         typeof siteSettings.heroLogo === 'object' && siteSettings.heroLogo !== null
           ? (siteSettings.heroLogo as any)?.url || '/logo.svg'

@@ -64,6 +64,8 @@ const Hero: React.FC<HeroProps> = ({ siteSettings }) => {
             fill
             className="object-cover brightness-75"
             priority
+            placeholder={siteSettings.heroBackgroundImageBlur ? 'blur' : 'empty'}
+            blurDataURL={siteSettings.heroBackgroundImageBlur}
           />
         </div>
       )}

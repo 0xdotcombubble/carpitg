@@ -3,6 +3,7 @@ export interface SiteSettings {
   heroSubtitle: string
   heroDescription: string
   heroBackgroundImage: string
+  heroBackgroundImageBlur?: string
   heroLogo: string
   portfolioTitle: string
   portfolioSubtitle: string
