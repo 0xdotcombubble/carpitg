@@ -36,6 +36,15 @@ export const SiteSettings: GlobalConfig = {
             address: doc.address,
             instagram: doc.instagram,
             facebook: doc.facebook,
+            vcardCompanyName: doc.vcardCompanyName || 'CarPit Garage',
+            vcardJobTitle: doc.vcardJobTitle || 'Professzionális Autókozmetika és Detailing',
+            vcardWebsite: doc.vcardWebsite || 'https://carpitgarage.hu',
+            vcardPhoto:
+              typeof doc.vcardPhoto === 'object' && doc.vcardPhoto !== null
+                ? doc.vcardPhoto?.url || ''
+                : doc.vcardPhoto || '',
+            vcardIncludeInstagram: doc.vcardIncludeInstagram ?? true,
+            vcardIncludeFacebook: doc.vcardIncludeFacebook ?? true,
           }
 
           // Generate vCard content
@@ -199,6 +208,76 @@ export const SiteSettings: GlobalConfig = {
               type: 'text',
               label: 'Facebook URL',
               defaultValue: 'https://www.facebook.com/share/16mtfkk7VR/',
+            },
+          ],
+        },
+        {
+          label: 'vCard Settings',
+          description: 'Configure the contact card (vCard) that users can download',
+          fields: [
+            {
+              name: 'vcardCompanyName',
+              type: 'text',
+              label: 'Company Name',
+              defaultValue: 'CarPit Garage',
+              required: true,
+              admin: {
+                description: 'Company name shown in the vCard',
+              },
+            },
+            {
+              name: 'vcardJobTitle',
+              type: 'text',
+              label: 'Job Title / Description',
+              defaultValue: 'Professzionális Autókozmetika és Detailing',
+              required: true,
+              admin: {
+                description: 'Business description or job title',
+              },
+            },
+            {
+              name: 'vcardWebsite',
+              type: 'text',
+              label: 'Website URL',
+              defaultValue: 'https://carpitgarage.hu',
+              required: true,
+              admin: {
+                description: 'Website URL for the vCard',
+              },
+            },
+            {
+              name: 'vcardPhoto',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'vCard Photo',
+              required: false,
+              admin: {
+                description:
+                  'Image/logo shown in contact apps (recommended: square image, at least 256x256px)',
+              },
+            },
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'vcardIncludeInstagram',
+                  type: 'checkbox',
+                  label: 'Include Instagram',
+                  defaultValue: true,
+                  admin: {
+                    description: 'Add Instagram to vCard',
+                  },
+                },
+                {
+                  name: 'vcardIncludeFacebook',
+                  type: 'checkbox',
+                  label: 'Include Facebook',
+                  defaultValue: true,
+                  admin: {
+                    description: 'Add Facebook to vCard',
+                  },
+                },
+              ],
             },
           ],
         },

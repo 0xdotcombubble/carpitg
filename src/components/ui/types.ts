@@ -17,6 +17,12 @@ export interface SiteSettings {
   instagram: string
   facebook: string
   vcardUrl?: string
+  vcardCompanyName: string
+  vcardJobTitle: string
+  vcardWebsite: string
+  vcardPhoto?: string
+  vcardIncludeInstagram: boolean
+  vcardIncludeFacebook: boolean
 }
 
 export interface ContentItem {

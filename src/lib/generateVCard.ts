@@ -37,9 +37,10 @@ function parseAddress(address: string): {
 export function generateVCard(siteSettings: SiteSettings): string {
   const vCard = new VCard()
 
-  // Organization and company name
-  vCard.addCompany('CarPit Garage')
-  vCard.addName('', 'CarPit Garage')
+  // Organization and company name (from CMS)
+  const companyName = siteSettings.vcardCompanyName || 'CarPit Garage'
+  vCard.addCompany(companyName)
+  vCard.addName('', companyName)
 
   // Contact information
   vCard.addPhoneNumber(siteSettings.phone, 'WORK')
@@ -58,20 +59,32 @@ export function generateVCard(siteSettings: SiteSettings): string {
     'WORK',
   )
 
-  // Website URL
-  vCard.addURL('https://carpitgarage.hu', 'WORK')
+  // Website URL (from CMS)
+  const website = siteSettings.vcardWebsite || 'https://carpitgarage.hu'
+  vCard.addURL(website, 'WORK')
 
-  // Social media profiles
-  if (siteSettings.instagram) {
+  // Social media profiles (with CMS toggle)
+  if (siteSettings.vcardIncludeInstagram && siteSettings.instagram) {
     vCard.addSocial(siteSettings.instagram, 'Instagram')
   }
 
-  if (siteSettings.facebook) {
+  if (siteSettings.vcardIncludeFacebook && siteSettings.facebook) {
     vCard.addSocial(siteSettings.facebook, 'Facebook')
   }
 
-  // Job title / role
-  vCard.addJobtitle('Professzionális Autókozmetika és Detailing')
+  // Job title / role (from CMS)
+  const jobTitle = siteSettings.vcardJobTitle || 'Professzionális Autókozmetika és Detailing'
+  vCard.addJobtitle(jobTitle)
+
+  // Add photo if available (from CMS vCard photo field)
+  if (siteSettings.vcardPhoto) {
+    // Convert to absolute URL if it's a relative path
+    const photoUrl = siteSettings.vcardPhoto.startsWith('http')
+      ? siteSettings.vcardPhoto
+      : `https://carpitgarage.hu${siteSettings.vcardPhoto}`
+
+    vCard.addPhotoURL(photoUrl)
+  }
 
   // Build and return the vCard content
   return vCard.buildVCard()
