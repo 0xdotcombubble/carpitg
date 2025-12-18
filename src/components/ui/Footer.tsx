@@ -11,17 +11,6 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ siteSettings }) => {
-  const fallbackContactData = {
-    phone: '+36703339809',
-    email: 'info@carpitgarage.hu',
-    address: '1172 Budapest\nCinkotai út 26.',
-    instagram: 'https://www.instagram.com/carpit_grg',
-    facebook: 'https://www.facebook.com/share/16mtfkk7VR/',
-  }
-
-  // Use fallback data if not available
-  const contactData = { ...fallbackContactData, ...siteSettings }
-
   return (
     <footer className="relative border-t border-white/10 py-12 md:py-16 bg-[#0D0D0D]">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
@@ -47,7 +36,7 @@ const Footer: React.FC<FooterProps> = ({ siteSettings }) => {
             </p>
             <div className="flex justify-center md:justify-start gap-4 mt-6">
               <a
-                href={contactData.instagram}
+                href={siteSettings.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-accent hover:text-accent/80 transition"
@@ -55,7 +44,7 @@ const Footer: React.FC<FooterProps> = ({ siteSettings }) => {
                 <Instagram size={20} />
               </a>
               <a
-                href={contactData.facebook}
+                href={siteSettings.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-accent hover:text-accent/80 transition"
@@ -121,13 +110,13 @@ const Footer: React.FC<FooterProps> = ({ siteSettings }) => {
             <h4 className="font-semibold text-white mb-4">Elérhetőség</h4>
             <ul className="space-y-2 text-white/60">
               <li>
-                <a href={`tel:${contactData.phone}`} className="hover:text-accent transition">
-                  {formatPhoneNumber(contactData.phone)}
+                <a href={`tel:${siteSettings.phone}`} className="hover:text-accent transition">
+                  {formatPhoneNumber(siteSettings.phone)}
                 </a>
               </li>
               <li>
-                <a href={`mailto:${contactData.email}`} className="hover:text-accent transition">
-                  {contactData.email}
+                <a href={`mailto:${siteSettings.email}`} className="hover:text-accent transition">
+                  {siteSettings.email}
                 </a>
               </li>
             </ul>
