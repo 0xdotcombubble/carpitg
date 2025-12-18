@@ -64,25 +64,26 @@ const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [], site
     <section ref={containerRef} id="pricing" className="relative md:bg-transparent bg-[#0D0D0D]">
       {/* Header Section */}
       <div className="py-24 md:py-32 relative overflow-hidden">
-        {/* Desktop Parallax Background */}
-        {isClient && !isMobile && (
-          <div
-            className="absolute inset-0 w-full h-[120%]"
-            style={{ transform: `translateY(${parallaxY}px)` }}
-          >
-            <Image src={siteSettings.heroBackgroundImage} alt="Background" fill className="object-cover" />
-          </div>
-        )}
-
-        {/* Mobile Background */}
-        {isClient && isMobile && (
-          <div className="absolute inset-0 w-full h-full">
-            <Image src={siteSettings.heroBackgroundImage} alt="Background" fill className="object-cover" />
-          </div>
-        )}
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 w-full h-full"
+          style={
+            !isClient || isMobile
+              ? undefined
+              : { transform: `translateY(${parallaxY}px)`, height: '120%' }
+          }
+        >
+          <Image
+            src={siteSettings.heroBackgroundImage}
+            alt="Background"
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
 
         {/* Overlay */}
-        <div className="absolute inset-0 bg-black/70"></div>
+        <div className="absolute inset-0 bg-black/70 z-[1]"></div>
 
         <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
           <div className="space-y-4 mb-16 text-center">
