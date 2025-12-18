@@ -15,27 +15,27 @@ export const SiteSettings: GlobalConfig = {
         try {
           // Transform the document to match SiteSettings interface
           const settings = {
-            heroTitle: doc.heroTitle,
-            heroSubtitle: doc.heroSubtitle,
-            heroDescription: doc.heroDescription,
+            heroTitle: doc.heroTitle || '',
+            heroSubtitle: doc.heroSubtitle || '',
+            heroDescription: doc.heroDescription || '',
             heroBackgroundImage:
               typeof doc.heroBackgroundImage === 'object'
                 ? doc.heroBackgroundImage?.url || ''
                 : doc.heroBackgroundImage || '',
             heroLogo:
               typeof doc.heroLogo === 'object' ? doc.heroLogo?.url || '' : doc.heroLogo || '',
-            portfolioTitle: doc.portfolioTitle,
-            portfolioSubtitle: doc.portfolioSubtitle,
-            servicesTitle: doc.servicesTitle,
-            servicesSubtitle: doc.servicesSubtitle,
-            pricingTitle: doc.pricingTitle,
-            pricingSubtitle: doc.pricingSubtitle,
-            pricingNote: doc.pricingNote,
-            phone: doc.phone,
-            email: doc.email,
-            address: doc.address,
-            instagram: doc.instagram,
-            facebook: doc.facebook,
+            portfolioTitle: doc.portfolioTitle || '',
+            portfolioSubtitle: doc.portfolioSubtitle || '',
+            servicesTitle: doc.servicesTitle || '',
+            servicesSubtitle: doc.servicesSubtitle || '',
+            pricingTitle: doc.pricingTitle || '',
+            pricingSubtitle: doc.pricingSubtitle || '',
+            pricingNote: doc.pricingNote || '',
+            phone: doc.phone || '',
+            email: doc.email || '',
+            address: doc.address || '',
+            instagram: doc.instagram || '',
+            facebook: doc.facebook || '',
             vcardCompanyName: doc.vcardCompanyName || 'CarPit Garage',
             vcardJobTitle: doc.vcardJobTitle || 'Professzionális Autókozmetika és Detailing',
             vcardWebsite: doc.vcardWebsite || 'https://carpitgarage.hu',
