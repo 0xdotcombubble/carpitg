@@ -1,4 +1,6 @@
 import type { GlobalConfig } from 'payload'
+import { generateVCard } from '../lib/generateVCard'
+import { uploadVCardToR2 } from '../lib/uploadVCardToR2'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
@@ -6,6 +8,54 @@ export const SiteSettings: GlobalConfig = {
   access: {
     read: () => true, // Allow public read access
     update: ({ req }) => Boolean(req.user), // Only authenticated users can update
+  },
+  hooks: {
+    afterChange: [
+      async ({ doc }) => {
+        try {
+          // Transform the document to match SiteSettings interface
+          const settings = {
+            heroTitle: doc.heroTitle,
+            heroSubtitle: doc.heroSubtitle,
+            heroDescription: doc.heroDescription,
+            heroBackgroundImage:
+              typeof doc.heroBackgroundImage === 'object'
+                ? doc.heroBackgroundImage?.url || ''
+                : doc.heroBackgroundImage || '',
+            heroLogo:
+              typeof doc.heroLogo === 'object' ? doc.heroLogo?.url || '' : doc.heroLogo || '',
+            portfolioTitle: doc.portfolioTitle,
+            portfolioSubtitle: doc.portfolioSubtitle,
+            servicesTitle: doc.servicesTitle,
+            servicesSubtitle: doc.servicesSubtitle,
+            pricingTitle: doc.pricingTitle,
+            pricingSubtitle: doc.pricingSubtitle,
+            pricingNote: doc.pricingNote,
+            phone: doc.phone,
+            email: doc.email,
+            address: doc.address,
+            instagram: doc.instagram,
+            facebook: doc.facebook,
+          }
+
+          // Generate vCard content
+          const vcardContent = generateVCard(settings)
+
+          // Upload to R2
+          const vcardUrl = await uploadVCardToR2(vcardContent)
+
+          if (vcardUrl) {
+            console.log('✓ vCard successfully generated and uploaded to R2:', vcardUrl)
+          } else {
+            console.error('✗ Failed to upload vCard to R2')
+          }
+        } catch (error) {
+          console.error('Error in SiteSettings afterChange hook:', error)
+        }
+
+        return doc
+      },
+    ],
   },
   fields: [
     {
@@ -32,7 +82,8 @@ export const SiteSettings: GlobalConfig = {
               name: 'heroDescription',
               type: 'textarea',
               label: 'Hero Description',
-              defaultValue: 'Ahol a precizitás találkozik a szenvedéllyel. Minden autó egyedi, minden részlet számít',
+              defaultValue:
+                'Ahol a precizitás találkozik a szenvedéllyel. Minden autó egyedi, minden részlet számít',
               required: true,
             },
             {
@@ -79,7 +130,8 @@ export const SiteSettings: GlobalConfig = {
               name: 'servicesSubtitle',
               type: 'textarea',
               label: 'Services Section Subtitle',
-              defaultValue: 'Modern technológiák és hagyományos kézműves technikák egyesítése. Minden autó egyedi kezelést érdemel.',
+              defaultValue:
+                'Modern technológiák és hagyományos kézműves technikák egyesítése. Minden autó egyedi kezelést érdemel.',
               required: true,
             },
             {
@@ -93,14 +145,16 @@ export const SiteSettings: GlobalConfig = {
               name: 'pricingSubtitle',
               type: 'textarea',
               label: 'Pricing Section Subtitle',
-              defaultValue: 'Válassz a négy csomag közül - mindegyik tartalmazza az anyagköltséget és a munkadíjat.',
+              defaultValue:
+                'Válassz a négy csomag közül - mindegyik tartalmazza az anyagköltséget és a munkadíjat.',
               required: true,
             },
             {
               name: 'pricingNote',
               type: 'textarea',
               label: 'Pricing Note',
-              defaultValue: 'Az árak átlagosan szennyezett, 5 személyes gépjárművekre vonatkoznak. Munkás autók, extrán szennyezett autók esetében az ár eltérhet.',
+              defaultValue:
+                'Az árak átlagosan szennyezett, 5 személyes gépjárművekre vonatkoznak. Munkás autók, extrán szennyezett autók esetében az ár eltérhet.',
               required: true,
             },
           ],

@@ -16,6 +16,7 @@ export interface SiteSettings {
   address: string
   instagram: string
   facebook: string
+  vcardUrl?: string
 }
 
 export interface ContentItem {

@@ -52,6 +52,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
         typeof siteSettings.heroLogo === 'object' && siteSettings.heroLogo !== null
           ? (siteSettings.heroLogo as any)?.url || '/logo.svg'
           : siteSettings.heroLogo || '/logo.svg',
+      vcardUrl: '/api/media/file/contact.vcf', // Static vCard URL uploaded via hook
     } as SiteSettings
   } catch (error) {
     console.error('Error fetching site settings:', error)
