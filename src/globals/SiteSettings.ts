@@ -251,7 +251,6 @@ export const SiteSettings: GlobalConfig = {
               type: 'upload',
               relationTo: 'media',
               label: 'vCard Photo',
-              required: false,
               admin: {
                 description:
                   'Image/logo shown in contact apps (recommended: square image, at least 256x256px)',
