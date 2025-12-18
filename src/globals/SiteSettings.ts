@@ -1,4 +1,6 @@
 import type { GlobalConfig } from 'payload'
+import { generateVCard } from '../lib/generateVCard'
+import { uploadVCardToR2 } from '../lib/uploadVCardToR2'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
@@ -7,8 +9,78 @@ export const SiteSettings: GlobalConfig = {
     read: () => true, // Allow public read access
     update: ({ req }) => Boolean(req.user), // Only authenticated users can update
   },
-  // Hook disabled - vCard generation happens on frontend page load instead
-  // This avoids issues with Cloudflare Workers context during admin saves
+  hooks: {
+    beforeValidate: [
+      ({ data }) => {
+        // Set default values if fields are undefined or empty
+        if (!data.vcardCompanyName) data.vcardCompanyName = 'CarPit Garage'
+        if (!data.vcardJobTitle) data.vcardJobTitle = 'Professzionális Autókozmetika és Detailing'
+        if (!data.vcardWebsite) data.vcardWebsite = 'https://carpitgarage.hu'
+        if (data.vcardIncludeInstagram === undefined) data.vcardIncludeInstagram = true
+        if (data.vcardIncludeFacebook === undefined) data.vcardIncludeFacebook = true
+        return data
+      },
+    ],
+    afterChange: [
+      async ({ doc, req }) => {
+        // Only run vCard generation outside admin API context
+        // This prevents issues during admin saves
+        const isAdminAPI = req?.url?.includes('/api/globals/site-settings')
+
+        if (isAdminAPI) {
+          console.log('⚠ Skipping vCard generation in admin context')
+          return doc
+        }
+
+        // Run vCard generation asynchronously
+        try {
+          const settings = {
+            heroTitle: doc.heroTitle || '',
+            heroSubtitle: doc.heroSubtitle || '',
+            heroDescription: doc.heroDescription || '',
+            heroBackgroundImage:
+              typeof doc.heroBackgroundImage === 'object'
+                ? doc.heroBackgroundImage?.url || ''
+                : doc.heroBackgroundImage || '',
+            heroLogo:
+              typeof doc.heroLogo === 'object' ? doc.heroLogo?.url || '' : doc.heroLogo || '',
+            portfolioTitle: doc.portfolioTitle || '',
+            portfolioSubtitle: doc.portfolioSubtitle || '',
+            servicesTitle: doc.servicesTitle || '',
+            servicesSubtitle: doc.servicesSubtitle || '',
+            pricingTitle: doc.pricingTitle || '',
+            pricingSubtitle: doc.pricingSubtitle || '',
+            pricingNote: doc.pricingNote || '',
+            phone: doc.phone || '',
+            email: doc.email || '',
+            address: doc.address || '',
+            instagram: doc.instagram || '',
+            facebook: doc.facebook || '',
+            vcardCompanyName: doc.vcardCompanyName || 'CarPit Garage',
+            vcardJobTitle: doc.vcardJobTitle || 'Professzionális Autókozmetika és Detailing',
+            vcardWebsite: doc.vcardWebsite || 'https://carpitgarage.hu',
+            vcardPhoto:
+              typeof doc.vcardPhoto === 'object' && doc.vcardPhoto !== null
+                ? doc.vcardPhoto?.url || ''
+                : doc.vcardPhoto || '',
+            vcardIncludeInstagram: doc.vcardIncludeInstagram ?? true,
+            vcardIncludeFacebook: doc.vcardIncludeFacebook ?? true,
+          }
+
+          const vcardContent = generateVCard(settings)
+          const vcardUrl = await uploadVCardToR2(vcardContent)
+
+          if (vcardUrl) {
+            console.log('✓ vCard generated via hook')
+          }
+        } catch (error) {
+          console.warn('Could not generate vCard via hook:', error)
+        }
+
+        return doc
+      },
+    ],
+  },
   fields: [
     {
       type: 'tabs',
