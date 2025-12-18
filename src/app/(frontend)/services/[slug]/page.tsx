@@ -4,12 +4,20 @@ import { getServiceBySlug, getServices } from '@/lib/getPageData'
 import Image from 'next/image'
 import Link from 'next/link'
 
+// Enable dynamic params (allows routes not in generateStaticParams)
+export const dynamicParams = true
+
 // Generate static params for all services
 export async function generateStaticParams() {
-  const services = await getServices()
-  return services.map((service) => ({
-    slug: service.slug,
-  }))
+  try {
+    const services = await getServices()
+    return services.map((service) => ({
+      slug: service.slug,
+    }))
+  } catch (error) {
+    console.error('Error generating static params for services:', error)
+    return []
+  }
 }
 
 // Generate metadata for SEO

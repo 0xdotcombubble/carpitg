@@ -12,21 +12,48 @@ interface ServicesSectionProps {
 const ServicesSection: React.FC<ServicesSectionProps> = ({ siteSettings, services = [] }) => {
   const [isMobile, setIsMobile] = useState(false)
   const [isClient, setIsClient] = useState(false)
-  const [_scrollY, _setScrollY] = useState(0)
+  const [cardScales, setCardScales] = useState<number[]>([])
   const containerRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     setIsClient(true)
+    // Initialize card scales
+    setCardScales(services.map((_, i) => 1 - i * 0.002))
 
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768)
     }
 
     const handleScroll = () => {
-      _setScrollY(window.pageYOffset)
+      if (window.innerWidth < 768) return // Skip on mobile
+
+      const containerRect = containerRef.current?.getBoundingClientRect()
+      if (!containerRect) return
+
+      const scrollProgress = Math.max(
+        0,
+        Math.min(
+          1,
+          (window.innerHeight - containerRect.top) / (window.innerHeight + containerRect.height),
+        ),
+      )
+
+      const newScales = services.map((_, index) => {
+        const targetScale = 1 - index * 0.005
+        const range = [index * 0.15, 1]
+        const progress = Math.max(
+          0,
+          Math.min(1, (scrollProgress - range[0]) / (range[1] - range[0])),
+        )
+        return 1 + progress * (targetScale - 1)
+      })
+
+      setCardScales(newScales)
     }
 
     checkMobile()
+    handleScroll() // Initial calculation
+
     window.addEventListener('resize', checkMobile)
     window.addEventListener('scroll', handleScroll, { passive: true })
 
@@ -34,28 +61,13 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ siteSettings, service
       window.removeEventListener('resize', checkMobile)
       window.removeEventListener('scroll', handleScroll)
     }
-  }, [])
+  }, [services])
 
   const getCardScale = (index: number): number => {
     if (!isClient || isMobile) {
       return 1 - index * 0.002
     }
-
-    const containerRect = containerRef.current?.getBoundingClientRect()
-    const scrollProgress = containerRect
-      ? Math.max(
-          0,
-          Math.min(
-            1,
-            (window.innerHeight - containerRect.top) / (window.innerHeight + containerRect.height),
-          ),
-        )
-      : 0
-
-    const targetScale = 1 - index * 0.005
-    const range = [index * 0.15, 1]
-    const progress = Math.max(0, Math.min(1, (scrollProgress - range[0]) / (range[1] - range[0])))
-    return 1 + progress * (targetScale - 1)
+    return cardScales[index] || 1
   }
 
   const getCardTop = (index: number): string => {
@@ -149,7 +161,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ siteSettings, service
                     </div>
                   </div>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-accent/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-linear-to-t from-accent/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                   <div className="absolute bottom-0 right-0 w-32 h-32 border-t-2 border-l-2 border-accent/20 group-hover:border-accent/40 transition-colors duration-500"></div>
                 </div>
               </Link>
@@ -161,7 +173,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ siteSettings, service
       {/* Footer Section */}
       <div className="py-24 md:py-32 relative">
         <div className="max-w-7xl mx-auto px-6 md:px-12 relative">
-          <div className="bg-gradient-to-r from-card/30 to-card/10 border border-white/10 p-8 lg:p-12">
+          <div className="bg-linear-to-t from-card/30 to-card/10 border border-white/10 p-8 lg:p-12">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
               <div>
                 <h3 className="font-display text-2xl lg:text-3xl font-bold text-white mb-4">

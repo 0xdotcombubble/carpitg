@@ -4,12 +4,20 @@ import { getPortfolioBySlug, getPortfolio } from '@/lib/getPageData'
 import Image from 'next/image'
 import Link from 'next/link'
 
+// Enable dynamic params (allows routes not in generateStaticParams)
+export const dynamicParams = true
+
 // Generate static params for all portfolio items
 export async function generateStaticParams() {
-  const portfolio = await getPortfolio()
-  return portfolio.map((item) => ({
-    slug: item.slug,
-  }))
+  try {
+    const portfolio = await getPortfolio()
+    return portfolio.map((item) => ({
+      slug: item.slug,
+    }))
+  } catch (error) {
+    console.error('Error generating static params for portfolio:', error)
+    return []
+  }
 }
 
 // Generate metadata for SEO

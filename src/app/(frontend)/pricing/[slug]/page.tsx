@@ -4,12 +4,20 @@ import { getPricingBySlug, getPricing } from '@/lib/getPageData'
 import Image from 'next/image'
 import Link from 'next/link'
 
+// Enable dynamic params (allows routes not in generateStaticParams)
+export const dynamicParams = true
+
 // Generate static params for all pricing items
 export async function generateStaticParams() {
-  const pricing = await getPricing()
-  return pricing.map((item) => ({
-    slug: item.slug,
-  }))
+  try {
+    const pricing = await getPricing()
+    return pricing.map((item) => ({
+      slug: item.slug,
+    }))
+  } catch (error) {
+    console.error('Error generating static params for pricing:', error)
+    return []
+  }
 }
 
 // Generate metadata for SEO
