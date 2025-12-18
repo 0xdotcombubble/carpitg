@@ -8,4 +8,4 @@ export { default as Footer } from './Footer'
 export { default as SmoothScrollWrapper } from './SmoothScrollWrapper'
 
 export * from './types'
-export { cn, formatPhoneNumber } from '../utils'
+export { cn } from '../utils'

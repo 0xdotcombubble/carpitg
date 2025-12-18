@@ -83,8 +83,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [], site
         </div>
 
         {/* Overlay */}
-        <div className="absolute inset-0 bg-black/70 z-[1]"></div>
-
+        <div className="absolute inset-0 bg-black/70 z-1"></div>
         <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
           <div className="space-y-4 mb-16 text-center">
             <div className="flex items-center justify-center gap-3 mb-6">

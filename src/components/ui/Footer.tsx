@@ -4,7 +4,6 @@ import React from 'react'
 import Image from 'next/image'
 import { Facebook, Instagram } from 'lucide-react'
 import { SiteSettings } from './types'
-import { formatPhoneNumber } from '../utils'
 
 interface FooterProps {
   siteSettings: SiteSettings
@@ -111,7 +110,7 @@ const Footer: React.FC<FooterProps> = ({ siteSettings }) => {
             <ul className="space-y-2 text-white/60">
               <li>
                 <a href={`tel:${siteSettings.phone}`} className="hover:text-accent transition">
-                  {formatPhoneNumber(siteSettings.phone)}
+                  {siteSettings.phone}
                 </a>
               </li>
               <li>
