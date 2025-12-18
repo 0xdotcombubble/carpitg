@@ -571,15 +571,15 @@ export interface SiteSetting {
   /**
    * Company name shown in the vCard
    */
-  vcardCompanyName: string;
+  vcardCompanyName?: string | null;
   /**
    * Business description or job title
    */
-  vcardJobTitle: string;
+  vcardJobTitle?: string | null;
   /**
    * Website URL for the vCard
    */
-  vcardWebsite: string;
+  vcardWebsite?: string | null;
   /**
    * Image/logo shown in contact apps (recommended: square image, at least 256x256px)
    */

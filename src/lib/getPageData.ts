@@ -1,6 +1,8 @@
 import { getPayload } from 'payload'
 import config from '@/payload.config'
 import type { SiteSettings, ServiceItem, PortfolioItem, PricingItem } from '@/components/ui/types'
+import { generateVCard } from './generateVCard'
+import { uploadVCardToR2 } from './uploadVCardToR2'
 
 // Default site settings fallback
 const defaultSiteSettings: SiteSettings = {
@@ -48,7 +50,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     })
 
     // Transform image uploads to include URLs
-    return {
+    const transformedSettings = {
       ...siteSettings,
       heroBackgroundImage:
         typeof siteSettings.heroBackgroundImage === 'object' &&
@@ -63,13 +65,26 @@ export async function getSiteSettings(): Promise<SiteSettings> {
         typeof siteSettings.vcardPhoto === 'object' && siteSettings.vcardPhoto !== null
           ? (siteSettings.vcardPhoto as any)?.url || ''
           : siteSettings.vcardPhoto || '',
-      vcardUrl: '/api/media/file/contact.vcf', // Static vCard URL uploaded via hook
+      vcardUrl: '/api/media/file/contact.vcf', // Static vCard URL
       vcardCompanyName: siteSettings.vcardCompanyName || 'CarPit Garage',
       vcardJobTitle: siteSettings.vcardJobTitle || 'Professzionális Autókozmetika és Detailing',
       vcardWebsite: siteSettings.vcardWebsite || 'https://carpitgarage.hu',
       vcardIncludeInstagram: siteSettings.vcardIncludeInstagram ?? true,
       vcardIncludeFacebook: siteSettings.vcardIncludeFacebook ?? true,
     } as SiteSettings
+
+    // Generate and upload vCard on page load (works in frontend context)
+    try {
+      const vcardContent = generateVCard(transformedSettings)
+      const vcardUrl = await uploadVCardToR2(vcardContent)
+      if (vcardUrl) {
+        console.log('✓ vCard generated and uploaded on page load')
+      }
+    } catch (error) {
+      console.warn('Could not generate vCard on page load:', error)
+    }
+
+    return transformedSettings
   } catch (error) {
     console.error('Error fetching site settings:', error)
     return defaultSiteSettings
