@@ -19,7 +19,7 @@ export default async function HomePage() {
       <Hero siteSettings={siteSettings} />
       <ServicesSection siteSettings={siteSettings} services={services} />
       <PortfolioSection portfolioItems={portfolioItems} />
-      <PricingSection pricingItems={pricingItems} siteSettings={siteSettings} />
+      <PricingSection pricingItems={pricingItems} />
       <ContactSection siteSettings={siteSettings} />
       <Footer siteSettings={siteSettings} />
     </SmoothScrollWrapper>
