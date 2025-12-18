@@ -15,7 +15,7 @@ export default async function HomePage() {
   const [{ siteSettings, services, portfolioItems, pricingItems }] = await Promise.all([
     getPageData(),
     // Minimum display time of 800ms to avoid loading flash
-    new Promise((resolve) => setTimeout(resolve, 800)),
+    new Promise((resolve) => setTimeout(resolve, 1600)),
   ])
 
   return (
