@@ -220,7 +220,6 @@ export const SiteSettings: GlobalConfig = {
               type: 'text',
               label: 'Company Name',
               defaultValue: 'CarPit Garage',
-              required: true,
               admin: {
                 description: 'Company name shown in the vCard',
               },
@@ -230,7 +229,6 @@ export const SiteSettings: GlobalConfig = {
               type: 'text',
               label: 'Job Title / Description',
               defaultValue: 'Professzionális Autókozmetika és Detailing',
-              required: true,
               admin: {
                 description: 'Business description or job title',
               },
@@ -240,7 +238,6 @@ export const SiteSettings: GlobalConfig = {
               type: 'text',
               label: 'Website URL',
               defaultValue: 'https://carpitgarage.hu',
-              required: true,
               admin: {
                 description: 'Website URL for the vCard',
               },
