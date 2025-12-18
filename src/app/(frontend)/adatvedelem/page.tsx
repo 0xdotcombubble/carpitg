@@ -59,38 +59,65 @@ export default function AdatvedelemPage() {
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">4. Az adatkezelés célja és jogalapja</h2>
+            <h2 className="text-2xl font-bold text-white mb-4">
+              4. Az adatkezelés célja és jogalapja
+            </h2>
 
             <div className="mb-6">
               <h3 className="text-xl font-semibold text-white mb-3">4.1. Időpontfoglalás</h3>
               <ul className="text-white/80 space-y-2">
-                <li><strong>Cél:</strong> Időpontfoglalás lebonyolítása és a szolgáltatás nyújtása</li>
-                <li><strong>Jogalap:</strong> Szerződés teljesítése (GDPR 6. cikk (1) bekezdés b) pont)</li>
-                <li><strong>Adatkezelés időtartama:</strong> Az utolsó szolgáltatástól számított 5 év</li>
+                <li>
+                  <strong>Cél:</strong> Időpontfoglalás lebonyolítása és a szolgáltatás nyújtása
+                </li>
+                <li>
+                  <strong>Jogalap:</strong> Szerződés teljesítése (GDPR 6. cikk (1) bekezdés b)
+                  pont)
+                </li>
+                <li>
+                  <strong>Adatkezelés időtartama:</strong> Az utolsó szolgáltatástól számított 5 év
+                </li>
               </ul>
             </div>
 
             <div className="mb-6">
               <h3 className="text-xl font-semibold text-white mb-3">4.2. Kapcsolattartás</h3>
               <ul className="text-white/80 space-y-2">
-                <li><strong>Cél:</strong> Az Ön megkeresésére való válaszadás, kapcsolattartás</li>
-                <li><strong>Jogalap:</strong> Az Ön hozzájárulása (GDPR 6. cikk (1) bekezdés a) pont)</li>
-                <li><strong>Adatkezelés időtartama:</strong> A megkeresés teljesítéséig, de maximum 1 év</li>
+                <li>
+                  <strong>Cél:</strong> Az Ön megkeresésére való válaszadás, kapcsolattartás
+                </li>
+                <li>
+                  <strong>Jogalap:</strong> Az Ön hozzájárulása (GDPR 6. cikk (1) bekezdés a) pont)
+                </li>
+                <li>
+                  <strong>Adatkezelés időtartama:</strong> A megkeresés teljesítéséig, de maximum 1
+                  év
+                </li>
               </ul>
             </div>
 
             <div className="mb-6">
-              <h3 className="text-xl font-semibold text-white mb-3">4.3. Számviteli kötelezettség</h3>
+              <h3 className="text-xl font-semibold text-white mb-3">
+                4.3. Számviteli kötelezettség
+              </h3>
               <ul className="text-white/80 space-y-2">
-                <li><strong>Cél:</strong> Számviteli és adózási kötelezettségek teljesítése</li>
-                <li><strong>Jogalap:</strong> Jogi kötelezettség teljesítése (GDPR 6. cikk (1) bekezdés c) pont)</li>
-                <li><strong>Adatkezelés időtartama:</strong> A számviteli bizonylatokat 8 évig őrizzük</li>
+                <li>
+                  <strong>Cél:</strong> Számviteli és adózási kötelezettségek teljesítése
+                </li>
+                <li>
+                  <strong>Jogalap:</strong> Jogi kötelezettség teljesítése (GDPR 6. cikk (1)
+                  bekezdés c) pont)
+                </li>
+                <li>
+                  <strong>Adatkezelés időtartama:</strong> A számviteli bizonylatokat 8 évig őrizzük
+                </li>
               </ul>
             </div>
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">5. Adattovábbítás, adatfeldolgozás</h2>
+            <h2 className="text-2xl font-bold text-white mb-4">
+              5. Adattovábbítás, adatfeldolgozás
+            </h2>
             <p className="text-white/80 mb-4">
               Az Adatkezelő az Ön személyes adatait harmadik fél számára nem továbbítja, kivéve:
             </p>
@@ -106,9 +133,7 @@ export default function AdatvedelemPage() {
 
           <section className="mb-12">
             <h2 className="text-2xl font-bold text-white mb-4">6. Az Ön jogai</h2>
-            <p className="text-white/80 mb-4">
-              A GDPR alapján az alábbi jogokkal rendelkezik:
-            </p>
+            <p className="text-white/80 mb-4">A GDPR alapján az alábbi jogokkal rendelkezik:</p>
             <ul className="text-white/80 space-y-3 list-disc list-inside">
               <li>
                 <strong>Tájékoztatáshoz való jog:</strong> Jogosult tájékoztatást kérni az
@@ -121,8 +146,8 @@ export default function AdatvedelemPage() {
                 <strong>Helyesbítéshez való jog:</strong> Kérheti a pontatlan adatok helyesbítését
               </li>
               <li>
-                <strong>Törléshez való jog:</strong> Kérheti adatai törlését ("az elfeledtetéshez
-                való jog")
+                <strong>Törléshez való jog:</strong> Kérheti adatai törlését (&quot;az
+                elfeledtetéshez való jog&quot;)
               </li>
               <li>
                 <strong>Adatkezelés korlátozásához való jog:</strong> Bizonyos esetekben kérheti az
@@ -154,9 +179,7 @@ export default function AdatvedelemPage() {
               <li>E-mail: ugyfelszolgalat@naih.hu</li>
               <li>Weboldal: www.naih.hu</li>
             </ul>
-            <p className="text-white/80 mt-4">
-              Emellett jogosult bírósághoz fordulni is.
-            </p>
+            <p className="text-white/80 mt-4">Emellett jogosult bírósághoz fordulni is.</p>
           </section>
 
           <section className="mb-12">
@@ -195,9 +218,7 @@ export default function AdatvedelemPage() {
           </section>
 
           <section className="mb-12">
-            <p className="text-white/60 text-sm">
-              Utolsó frissítés: 2025. január 1.
-            </p>
+            <p className="text-white/60 text-sm">Utolsó frissítés: 2025. január 1.</p>
           </section>
         </div>
 

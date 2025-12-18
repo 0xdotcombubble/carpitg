@@ -3,14 +3,13 @@
 import React from 'react'
 import Link from 'next/link'
 import { Check } from 'lucide-react'
-import { PricingItem, SiteSettings } from './types'
+import { PricingItem } from './types'
 
 interface PricingSectionProps {
   pricingItems?: PricingItem[]
-  siteSettings: SiteSettings
 }
 
-const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [], siteSettings }) => {
+const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [] }) => {
   return (
     <section id="pricing" className="relative bg-[#0D0D0D]">
       {/* Header Section */}
