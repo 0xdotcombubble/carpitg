@@ -5,7 +5,6 @@ export { default as PortfolioSection } from './PortfolioSection'
 export { default as PricingSection } from './PricingSection'
 export { default as ContactSection } from './ContactSection'
 export { default as Footer } from './Footer'
-export { default as SmoothScrollWrapper } from './SmoothScrollWrapper'
 
 export * from './types'
 export { cn } from '../utils'

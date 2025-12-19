@@ -1,5 +1,3 @@
-'use client'
-
 import React from 'react'
 import Image from 'next/image'
 import { Facebook, Instagram } from 'lucide-react'
@@ -21,6 +19,7 @@ const Footer: React.FC<FooterProps> = ({ siteSettings }) => {
                 alt="CarPit Garage Logo"
                 width={64}
                 height={64}
+                sizes="(max-width: 640px) 48px, (max-width: 768px) 56px, 64px"
                 unoptimized={siteSettings.heroLogo?.endsWith('.svg')}
                 className="h-12 sm:h-14 md:h-16 w-auto object-contain brightness-0 saturate-100"
                 style={{

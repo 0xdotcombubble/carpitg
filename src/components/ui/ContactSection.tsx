@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { Mail, Phone, MapPin, Clock } from 'lucide-react'
 import Image from 'next/image'
 import { SiteSettings } from './types'
+import { blurDataURLs } from '@/lib/blurDataURL'
 
 interface ContactFormData {
   name: string
@@ -16,7 +17,7 @@ interface ContactSectionProps {
   siteSettings: SiteSettings
 }
 
-const ContactSection: React.FC<ContactSectionProps> = ({ siteSettings }) => {
+const ContactSection = React.memo<ContactSectionProps>(({ siteSettings }) => {
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
@@ -56,7 +57,10 @@ const ContactSection: React.FC<ContactSectionProps> = ({ siteSettings }) => {
           src={siteSettings.heroBackgroundImage}
           alt="Contact Background"
           fill
+          sizes="100vw"
           className="object-cover"
+          placeholder="blur"
+          blurDataURL={blurDataURLs.dark}
         />
       </div>
 
@@ -210,6 +214,8 @@ const ContactSection: React.FC<ContactSectionProps> = ({ siteSettings }) => {
       </div>
     </section>
   )
-}
+})
+
+ContactSection.displayName = 'ContactSection'
 
 export default ContactSection

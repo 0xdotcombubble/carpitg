@@ -4,6 +4,7 @@ import React from 'react'
 import { ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import { SiteSettings } from './types'
+import { blurDataURLs } from '@/lib/blurDataURL'
 
 interface HeroProps {
   siteSettings: SiteSettings
@@ -18,9 +19,12 @@ const Hero: React.FC<HeroProps> = ({ siteSettings }) => {
           src={siteSettings.heroBackgroundImage}
           alt="CarPit Garage Background"
           fill
+          sizes="100vw"
           className="object-cover brightness-75"
           priority
           fetchPriority="high"
+          placeholder="blur"
+          blurDataURL={blurDataURLs.dark}
         />
       </div>
 
@@ -44,6 +48,7 @@ const Hero: React.FC<HeroProps> = ({ siteSettings }) => {
                   alt="CarPit Garage Logo"
                   width={256}
                   height={256}
+                  sizes="(max-width: 640px) 112px, (max-width: 768px) 144px, (max-width: 1024px) 192px, (max-width: 1280px) 224px, 256px"
                   priority
                   unoptimized={siteSettings.heroLogo.endsWith('.svg')}
                   className="h-28 sm:h-36 md:h-48 lg:h-56 xl:h-64 w-auto object-contain brightness-0 saturate-100"

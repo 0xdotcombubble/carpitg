@@ -1,9 +1,21 @@
 import { withPayload } from '@payloadcms/next/withPayload'
 import type { NextConfig } from 'next'
 
+// Bundle analyzer for performance monitoring
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
+
 const nextConfig: NextConfig = {
   // Your Next.js config here
+  experimental: {
+    reactCompiler: true, // Enable React Compiler for automatic memoization
+  },
   images: {
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200], // Mobile-first sizes
+    imageSizes: [16, 32, 48, 64, 96, 128, 256], // Smaller default sizes
+    minimumCacheTTL: 60,
     remotePatterns: [
       {
         protocol: 'https' as const,
@@ -34,4 +46,4 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default withPayload(nextConfig, { devBundleServerPackages: false })
+export default withBundleAnalyzer(withPayload(nextConfig, { devBundleServerPackages: false }))

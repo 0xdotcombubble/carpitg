@@ -62,6 +62,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* Critical CSS for above-fold content */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              /* Critical hero styles for faster FCP */
+              .bg-background { background-color: hsl(222.2 84% 4.9%); }
+              .text-foreground { color: hsl(210 40% 98%); }
+              .bg-accent { background-color: hsl(12 100% 50%); }
+              .text-accent { color: hsl(12 100% 50%); }
+              .antialiased { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+              .scroll-smooth { scroll-behavior: smooth; }
+            `,
+          }}
+        />
       </head>
       <body className="bg-background text-foreground antialiased">{children}</body>
     </html>

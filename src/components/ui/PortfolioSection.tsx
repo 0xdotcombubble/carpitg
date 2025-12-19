@@ -1,25 +1,32 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { PortfolioItem } from './types'
+import { blurDataURLs } from '@/lib/blurDataURL'
 
 interface PortfolioSectionProps {
   portfolioItems?: PortfolioItem[]
 }
 
-const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = [] }) => {
+const PortfolioSection = React.memo<PortfolioSectionProps>(({ portfolioItems = [] }) => {
   const [selectedCategory, setSelectedCategory] = useState('Összes')
 
-  const categories = [
-    'Összes',
-    ...Array.from(new Set(portfolioItems.map((item) => item.metadata.category))),
-  ]
-  const filteredItems =
-    selectedCategory === 'Összes'
-      ? portfolioItems
-      : portfolioItems.filter((item) => item.metadata.category === selectedCategory)
+  // Memoize categories to avoid recalculation on every render
+  const categories = useMemo(
+    () => ['Összes', ...Array.from(new Set(portfolioItems.map((item) => item.metadata.category)))],
+    [portfolioItems],
+  )
+
+  // Memoize filtered items to avoid filtering on every render
+  const filteredItems = useMemo(
+    () =>
+      selectedCategory === 'Összes'
+        ? portfolioItems
+        : portfolioItems.filter((item) => item.metadata.category === selectedCategory),
+    [portfolioItems, selectedCategory],
+  )
 
   return (
     <section id="portfolio" className="relative md:bg-transparent bg-[#0D0D0D]">
@@ -97,8 +104,11 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
                         src={item.metadata.image || ''}
                         alt={item.metadata.title}
                         fill
+                        sizes="(max-width: 1024px) 100vw, 50vw"
                         className="object-cover cursor-pointer"
                         priority={i < 2}
+                        placeholder="blur"
+                        blurDataURL={blurDataURLs.darker}
                       />
                       <div className="absolute inset-0 bg-black/20"></div>
 
@@ -182,6 +192,8 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
       </div>
     </section>
   )
-}
+})
+
+PortfolioSection.displayName = 'PortfolioSection'
 
 export default PortfolioSection
