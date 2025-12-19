@@ -74,7 +74,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
             style={{
               top: `calc(-2vh + ${i * 25}px)`,
             }}
-            className="flex md:h-screen min-h-[400px] items-center justify-center sticky"
+            className="flex md:h-screen min-h-100 items-center justify-center sticky"
           >
             <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
               <Link href={`/portfolio/${item.slug}`} className="block">
@@ -90,7 +90,7 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[450px]">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 min-h-100">
                     {/* Image Section */}
                     <div className="relative overflow-hidden h-64 lg:h-auto">
                       <Image
@@ -111,8 +111,8 @@ const PortfolioSection: React.FC<PortfolioSectionProps> = ({ portfolioItems = []
                     </div>
 
                     {/* Content Section */}
-                    <div className="p-6 md:p-8 lg:p-12 pr-20 flex flex-col justify-between relative">
-                      <div className="flex-1 flex flex-col justify-center">
+                    <div className="p-6 md:p-8 lg:p-12 pr-20 flex flex-col justify-between relative z-0">
+                      <div className="flex-1 flex flex-col justify-center relative z-0">
                         {/* Desktop category */}
                         <div className="mb-4 hidden lg:block">
                           <span className="text-accent text-sm font-medium tracking-wide uppercase">

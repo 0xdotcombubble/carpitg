@@ -1,6 +1,7 @@
 import { getPayload } from 'payload'
 import config from '@/payload.config'
 import type { SiteSettings, ServiceItem, PortfolioItem, PricingItem } from '@/components/ui/types'
+import type { Media, Service } from '@/payload-types'
 
 // Default site settings fallback
 const defaultSiteSettings: SiteSettings = {
@@ -46,11 +47,11 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       heroBackgroundImage:
         typeof siteSettings.heroBackgroundImage === 'object' &&
         siteSettings.heroBackgroundImage !== null
-          ? (siteSettings.heroBackgroundImage as any)?.url || '/background.jpg'
+          ? (siteSettings.heroBackgroundImage as Media)?.url || '/background.jpg'
           : siteSettings.heroBackgroundImage || '/background.jpg',
       heroLogo:
         typeof siteSettings.heroLogo === 'object' && siteSettings.heroLogo !== null
-          ? (siteSettings.heroLogo as any)?.url || '/logo.svg'
+          ? (siteSettings.heroLogo as Media)?.url || '/logo.svg'
           : siteSettings.heroLogo || '/logo.svg',
     } as SiteSettings
 
@@ -137,10 +138,8 @@ export async function getPortfolio(): Promise<PortfolioItem[]> {
         },
         vehicleInfo: item.vehicleInfo || {},
         services: Array.isArray(item.services)
-          ? item.services.map((s: unknown) =>
-              typeof s === 'object' && s !== null && 'title' in s
-                ? (s as { title: string }).title || ''
-                : String(s),
+          ? item.services.map((s: number | Service) =>
+              typeof s === 'object' && s !== null && 'title' in s ? s.title || '' : String(s),
             )
           : [],
       },
@@ -184,10 +183,8 @@ export async function getPricing(): Promise<PricingItem[]> {
         vehicleTypes: item.vehicleTypes || [],
         notes: item.notes,
         services: Array.isArray(item.services)
-          ? item.services.map((s: unknown) =>
-              typeof s === 'object' && s !== null && 'title' in s
-                ? (s as { title: string }).title || ''
-                : String(s),
+          ? item.services.map((s: number | Service) =>
+              typeof s === 'object' && s !== null && 'title' in s ? s.title || '' : String(s),
             )
           : [],
       },
@@ -289,10 +286,8 @@ export async function getPortfolioBySlug(slug: string): Promise<PortfolioItem | 
         },
         vehicleInfo: item.vehicleInfo || {},
         services: Array.isArray(item.services)
-          ? item.services.map((s: unknown) =>
-              typeof s === 'object' && s !== null && 'title' in s
-                ? (s as { title: string }).title || ''
-                : String(s),
+          ? item.services.map((s: number | Service) =>
+              typeof s === 'object' && s !== null && 'title' in s ? s.title || '' : String(s),
             )
           : [],
       },

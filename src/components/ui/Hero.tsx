@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import { SiteSettings } from './types'
@@ -10,63 +10,19 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ siteSettings }) => {
-  const [isMobile, setIsMobile] = useState(false)
-  const [isClient, setIsClient] = useState(false)
-
-  useEffect(() => {
-    setIsClient(true)
-
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-
-    const updateParallax = () => {
-      const bgElement = document.getElementById('hero-bg')
-      if (!bgElement) return
-
-      const scrolled = window.pageYOffset
-      const heroHeight = window.innerHeight
-      const maxParallax = heroHeight * 0.5
-      const parallax = Math.max(-maxParallax, -scrolled * 0.3)
-      bgElement.style.transform = `translate3d(0, ${parallax}px, 0)`
-    }
-
-    if (typeof window !== 'undefined') {
-      requestAnimationFrame(() => {
-        updateParallax()
-      })
-
-      window.addEventListener('scroll', updateParallax, { passive: true })
-
-      return () => {
-        window.removeEventListener('resize', checkMobile)
-        window.removeEventListener('scroll', updateParallax)
-      }
-    }
-  }, [])
-
   return (
     <section className="relative h-screen overflow-hidden">
       {/* Background Image */}
-      {isClient && (
-        <div
-          id="hero-bg"
-          className={`absolute w-full will-change-transform ${
-            isMobile ? 'top-0 left-0 h-[130vh]' : 'top-0 left-0 h-[150vh]'
-          }`}
-        >
-          <Image
-            src={siteSettings.heroBackgroundImage}
-            alt="CarPit Garage Background"
-            fill
-            className="object-cover brightness-75"
-            priority
-          />
-        </div>
-      )}
+      <div className="absolute top-0 left-0 w-full h-[130vh] md:h-[150vh]">
+        <Image
+          src={siteSettings.heroBackgroundImage}
+          alt="CarPit Garage Background"
+          fill
+          className="object-cover brightness-75"
+          priority
+          fetchPriority="high"
+        />
+      </div>
 
       {/* Premium gradient overlay */}
       <div className="absolute inset-0 bg-linear-to-br from-black/60 via-black/40 to-black/70 z-10"></div>

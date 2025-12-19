@@ -46,7 +46,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ siteSettings, service
             style={{
               top: `calc(-2vh + ${i * 25}px)`,
             }}
-            className="flex md:h-screen min-h-[400px] items-center justify-center sticky"
+            className="flex md:h-screen min-h-100 items-center justify-center sticky"
           >
             <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
               <Link href={`/services/${service.metadata.slug}`} className="block">
@@ -62,7 +62,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ siteSettings, service
                     </div>
                   </div>
 
-                  <div className="flex flex-col justify-between p-6 md:p-8 lg:p-12 min-h-[400px]">
+                  <div className="flex flex-col justify-between p-6 md:p-8 lg:p-12 min-h-100">
                     <div className="flex-1 flex flex-col justify-center">
                       <h3 className="font-display text-2xl lg:text-4xl font-bold text-white mb-4 group-hover:text-accent transition-colors duration-300">
                         {service.metadata.title}
