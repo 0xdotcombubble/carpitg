@@ -156,7 +156,6 @@ export interface User {
 export interface Media {
   id: number;
   alt: string;
-  blurDataURL?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -214,7 +213,7 @@ export interface Portfolio {
    */
   slug?: string | null;
   description: string;
-  category: 'exterior' | 'interior' | 'full' | 'paint' | 'ceramic' | 'restoration';
+  category: 'Külső' | 'Belső' | 'Teljes' | 'Fényezés' | 'Kerámia' | 'Restaurálás';
   image: number | Media;
   gallery?:
     | {
@@ -411,7 +410,6 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
-  blurDataURL?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

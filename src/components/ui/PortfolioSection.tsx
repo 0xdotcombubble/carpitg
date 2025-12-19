@@ -121,8 +121,8 @@ const PortfolioSection = React.memo<PortfolioSectionProps>(({ portfolioItems = [
                     </div>
 
                     {/* Content Section */}
-                    <div className="p-6 md:p-8 lg:p-12 pr-20 flex flex-col justify-between relative z-0">
-                      <div className="flex-1 flex flex-col justify-center relative z-0">
+                    <div className="p-6 md:p-8 lg:p-12 flex flex-col justify-between relative">
+                      <div className="flex-1 flex flex-col justify-center pr-16 pb-16">
                         {/* Desktop category */}
                         <div className="mb-4 hidden lg:block">
                           <span className="text-accent text-sm font-medium tracking-wide uppercase">
@@ -136,12 +136,12 @@ const PortfolioSection = React.memo<PortfolioSectionProps>(({ portfolioItems = [
 
                         <div className="w-16 h-0.5 bg-linear-to-r from-accent to-accent/30 mb-4 group-hover:w-24 transition-all duration-500"></div>
 
-                        <p className="text-white/70 font-light leading-relaxed text-base lg:text-lg mb-6 pr-4">
+                        <p className="text-white/70 font-light leading-relaxed text-base lg:text-lg mb-6">
                           {item.metadata.description}
                         </p>
                       </div>
 
-                      <div className="absolute bottom-6 right-6 w-10 h-10 border border-accent/50 text-accent hover:bg-accent hover:text-white transition-all duration-300 flex items-center justify-center cursor-pointer z-10">
+                      <div className="absolute bottom-6 right-6 w-10 h-10 border border-accent/50 text-accent hover:bg-accent hover:text-white transition-all duration-300 flex items-center justify-center cursor-pointer z-20">
                         <span className="text-xl transform group-hover:rotate-45 transition-transform duration-300">
                           →
                         </span>

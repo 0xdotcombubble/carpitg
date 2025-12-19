@@ -38,12 +38,12 @@ export const Portfolio: CollectionConfig = {
       label: 'Category',
       required: true,
       options: [
-        { label: 'Exterior Detail', value: 'exterior' },
-        { label: 'Interior Detail', value: 'interior' },
-        { label: 'Full Detail', value: 'full' },
-        { label: 'Paint Correction', value: 'paint' },
-        { label: 'Ceramic Coating', value: 'ceramic' },
-        { label: 'Restoration', value: 'restoration' },
+        { label: 'Külső Tisztítás', value: 'Külső' },
+        { label: 'Belső Tisztítás', value: 'Belső' },
+        { label: 'Teljes Tisztítás', value: 'Teljes' },
+        { label: 'Fényezés Korrekció', value: 'Fényezés' },
+        { label: 'Kerámia Bevonat', value: 'Kerámia' },
+        { label: 'Restaurálás', value: 'Restaurálás' },
       ],
     },
     {

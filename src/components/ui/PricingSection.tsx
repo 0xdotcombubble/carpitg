@@ -66,8 +66,8 @@ const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [] }) =>
                     </div>
                   )}
 
-                  <div className="p-6 md:p-8 lg:p-12 min-h-137.5 flex flex-col justify-between">
-                    <div className="flex-1 flex flex-col justify-center">
+                  <div className="p-6 md:p-8 lg:p-12 min-h-137.5 flex flex-col justify-between relative">
+                    <div className="flex-1 flex flex-col justify-center pr-16 pb-16">
                       <div className="mb-4">
                         <span className="text-accent text-sm font-medium tracking-wide uppercase">
                           {item.metadata.category}
@@ -101,12 +101,10 @@ const PricingSection: React.FC<PricingSectionProps> = ({ pricingItems = [] }) =>
                     </div>
 
                     {/* Arrow element */}
-                    <div className="mt-6">
-                      <div className="absolute bottom-6 right-6 w-10 h-10 border border-accent/50 text-accent hover:bg-accent hover:text-white transition-all duration-300 flex items-center justify-center">
-                        <span className="text-xl transform group-hover:rotate-45 transition-transform duration-300">
-                          →
-                        </span>
-                      </div>
+                    <div className="absolute bottom-6 right-6 w-10 h-10 border border-accent/50 text-accent hover:bg-accent hover:text-white transition-all duration-300 flex items-center justify-center z-20">
+                      <span className="text-xl transform group-hover:rotate-45 transition-transform duration-300">
+                        →
+                      </span>
                     </div>
                   </div>
 
