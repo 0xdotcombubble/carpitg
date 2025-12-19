@@ -14,8 +14,6 @@ export default async function HomePage() {
   // Fetch all data server-side using Payload's Local API
   const [{ siteSettings, services, portfolioItems, pricingItems }] = await Promise.all([
     getPageData(),
-    // Minimum display time of 800ms to avoid loading flash
-    new Promise((resolve) => setTimeout(resolve, 1600)),
   ])
 
   return (
