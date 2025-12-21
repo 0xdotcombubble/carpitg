@@ -1,3 +1,4 @@
+import { withNextVideo } from "next-video/process";
 import { withPayload } from '@payloadcms/next/withPayload'
 import type { NextConfig } from 'next'
 
@@ -46,4 +47,6 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default withBundleAnalyzer(withPayload(nextConfig, { devBundleServerPackages: false }))
+export default withNextVideo(
+  withBundleAnalyzer(withPayload(nextConfig, { devBundleServerPackages: false }))
+);

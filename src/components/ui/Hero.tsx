@@ -4,7 +4,8 @@ import React from 'react'
 import { ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import { SiteSettings } from './types'
-import { blurDataURLs } from '@/lib/blurDataURL'
+import BackgroundVideo from 'next-video/background-video'
+import heroVideo from '/videos/mixkit-close-up-of-a-mechanic-polishing-a-car-47829-hd-ready.mp4'
 
 interface HeroProps {
   siteSettings: SiteSettings
@@ -13,18 +14,16 @@ interface HeroProps {
 const Hero: React.FC<HeroProps> = ({ siteSettings }) => {
   return (
     <section className="relative h-screen overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute top-0 left-0 w-full h-[130vh] md:h-[150vh]">
-        <Image
-          src={siteSettings.heroBackgroundImage}
-          alt="CarPit Garage Background"
-          fill
-          sizes="100vw"
+      {/* Background Video */}
+      <div className="absolute top-0 left-0 w-full h-full">
+        <BackgroundVideo
+          src={heroVideo}
           className="object-cover brightness-75"
-          priority
-          fetchPriority="high"
-          placeholder="blur"
-          blurDataURL={blurDataURLs.dark}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+          }}
         />
       </div>
 
