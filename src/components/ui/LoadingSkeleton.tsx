@@ -1,11 +1,11 @@
 import React from 'react'
 
 interface LoadingSkeletonProps {
-  type: 'portfolio' | 'pricing' | 'contact' | 'footer'
+  type: 'portfolio' | 'pricing' | 'services' | 'contact' | 'footer'
 }
 
 const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({ type }) => {
-  if (type === 'portfolio' || type === 'pricing') {
+  if (type === 'portfolio' || type === 'pricing' || type === 'services') {
     return (
       <section className="relative py-24 md:py-32 bg-[#0D0D0D]">
         <div className="max-w-7xl mx-auto px-6 md:px-12">

@@ -1,0 +1,1 @@
+This folder contains the built output assets for the worker "carpitg" generated at 2025-12-29T20:45:12.761Z.

@@ -1,11 +1,8 @@
-'use client'
-
 import React from 'react'
 import { ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import { SiteSettings } from './types'
-import BackgroundVideo from 'next-video/background-video'
-import heroVideo from '/videos/mixkit-close-up-of-a-mechanic-polishing-a-car-47829-hd-ready.mp4'
+import { HeroVideoBackground } from './HeroVideoBackground'
 
 interface HeroProps {
   siteSettings: SiteSettings
@@ -13,19 +10,9 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = ({ siteSettings }) => {
   return (
-    <section className="relative h-screen overflow-hidden">
-      {/* Background Video */}
-      <div className="absolute top-0 left-0 w-full h-full">
-        <BackgroundVideo
-          src={heroVideo}
-          className="object-cover brightness-75"
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-          }}
-        />
-      </div>
+    <section className="relative h-screen overflow-hidden bg-black">
+      {/* Background Video - Client Component (non-blocking) */}
+      <HeroVideoBackground />
 
       {/* Premium gradient overlay */}
       <div className="absolute inset-0 bg-linear-to-br from-black/60 via-black/40 to-black/70 z-10"></div>

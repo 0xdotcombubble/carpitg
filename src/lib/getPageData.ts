@@ -1,5 +1,6 @@
 import { getPayload } from 'payload'
 import config from '@/payload.config'
+import { unstable_cache } from 'next/cache'
 import type { SiteSettings, ServiceItem, PortfolioItem, PricingItem } from '@/components/ui/types'
 import type { Media, Service } from '@/payload-types'
 
@@ -30,9 +31,9 @@ const defaultSiteSettings: SiteSettings = {
 
 /**
  * Fetches site settings from Payload CMS
- * Uses Local API for server-side data fetching
+ * Uses Local API for server-side data fetching with caching
  */
-export async function getSiteSettings(): Promise<SiteSettings> {
+const getSiteSettingsUncached = async (): Promise<SiteSettings> => {
   try {
     const payload = await getPayload({ config })
 
@@ -62,11 +63,16 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   }
 }
 
+export const getSiteSettings = unstable_cache(getSiteSettingsUncached, ['site-settings'], {
+  revalidate: 3600, // 1 hour
+  tags: ['site-settings'],
+})
+
 /**
  * Fetches services from Payload CMS
- * Uses Local API for server-side data fetching
+ * Uses Local API for server-side data fetching with caching
  */
-export async function getServices(): Promise<ServiceItem[]> {
+const getServicesUncached = async (): Promise<ServiceItem[]> => {
   try {
     const payload = await getPayload({ config })
 
@@ -99,11 +105,16 @@ export async function getServices(): Promise<ServiceItem[]> {
   }
 }
 
+export const getServices = unstable_cache(getServicesUncached, ['services'], {
+  revalidate: 3600, // 1 hour
+  tags: ['services'],
+})
+
 /**
  * Fetches portfolio items from Payload CMS
- * Uses Local API for server-side data fetching
+ * Uses Local API for server-side data fetching with caching
  */
-export async function getPortfolio(): Promise<PortfolioItem[]> {
+const getPortfolioUncached = async (): Promise<PortfolioItem[]> => {
   try {
     const payload = await getPayload({ config })
 
@@ -151,11 +162,16 @@ export async function getPortfolio(): Promise<PortfolioItem[]> {
   }
 }
 
+export const getPortfolio = unstable_cache(getPortfolioUncached, ['portfolio'], {
+  revalidate: 3600, // 1 hour
+  tags: ['portfolio'],
+})
+
 /**
  * Fetches pricing items from Payload CMS
- * Uses Local API for server-side data fetching
+ * Uses Local API for server-side data fetching with caching
  */
-export async function getPricing(): Promise<PricingItem[]> {
+const getPricingUncached = async (): Promise<PricingItem[]> => {
   try {
     const payload = await getPayload({ config })
 
@@ -195,6 +211,11 @@ export async function getPricing(): Promise<PricingItem[]> {
     return []
   }
 }
+
+export const getPricing = unstable_cache(getPricingUncached, ['pricing'], {
+  revalidate: 3600, // 1 hour
+  tags: ['pricing'],
+})
 
 /**
  * Fetches a single service by slug
