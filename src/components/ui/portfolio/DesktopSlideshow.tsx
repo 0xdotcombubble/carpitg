@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useReducer, useCallback, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { PortfolioItem } from '../types'
 import { blurDataURLs } from '@/lib/blurDataURL'
@@ -9,64 +9,87 @@ interface DesktopSlideshowProps {
   items: PortfolioItem[]
 }
 
-export function DesktopSlideshow({ items }: DesktopSlideshowProps) {
-  // Restore slideshow position from sessionStorage
-  const [currentIndex, setCurrentIndex] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = sessionStorage.getItem('portfolio-slideshow-index')
-      const index = saved ? parseInt(saved, 10) : 0
-      return index >= 0 && index < items.length ? index : 0
-    }
-    return 0
-  })
-  const [isHovering, setIsHovering] = useState(false)
-  const [touchStart, setTouchStart] = useState(0)
-  const [touchEnd, setTouchEnd] = useState(0)
-  const touchStartY = useRef(0)
-  const touchMoveY = useRef(0)
+// Use reducer instead of multiple useState calls
+type State = {
+  currentIndex: number
+  isHovering: boolean
+}
 
-  // Save current index to sessionStorage
-  useEffect(() => {
-    sessionStorage.setItem('portfolio-slideshow-index', String(currentIndex))
-  }, [currentIndex])
+type Action =
+  | { type: 'NEXT' }
+  | { type: 'PREV' }
+  | { type: 'GO_TO'; index: number }
+  | { type: 'SET_HOVER'; isHovering: boolean }
 
-  // Preload all images to keep them in browser cache
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-
-    items.forEach((item) => {
-      if (item.metadata.image) {
-        const link = document.createElement('link')
-        link.rel = 'prefetch'
-        link.as = 'image'
-        link.href = item.metadata.image
-        document.head.appendChild(link)
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'NEXT':
+      return { ...state, currentIndex: (state.currentIndex + 1) % itemsLength }
+    case 'PREV':
+      return {
+        ...state,
+        currentIndex: state.currentIndex === 0 ? itemsLength - 1 : state.currentIndex - 1,
       }
-    })
-  }, [items])
+    case 'GO_TO':
+      return { ...state, currentIndex: action.index }
+    case 'SET_HOVER':
+      return { ...state, isHovering: action.isHovering }
+    default:
+      return state
+  }
+}
 
-  // Auto-play interval (6 seconds)
-  const autoPlayInterval = 6000
-  // Minimum swipe distance (in px)
+// Module-level variable to avoid closure issues
+let itemsLength = 0
+
+export function DesktopSlideshow({ items }: DesktopSlideshowProps) {
+  itemsLength = items.length
+
+  const [state, dispatch] = useReducer(reducer, {
+    currentIndex: 0,
+    isHovering: false,
+  })
+
+  const touchStartX = useRef(0)
+  const touchStartY = useRef(0)
+  const autoPlayTimerRef = useRef<NodeJS.Timeout | null>(null)
+
   const minSwipeDistance = 50
 
   const goToNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1))
-  }, [items.length])
+    dispatch({ type: 'NEXT' })
+  }, [])
 
   const goToPrevious = useCallback(() => {
-    setCurrentIndex((prev) => (prev === 0 ? items.length - 1 : prev - 1))
-  }, [items.length])
+    dispatch({ type: 'PREV' })
+  }, [])
 
   const goToSlide = useCallback((index: number) => {
-    setCurrentIndex(index)
-  }, []) // Auto-play functionality
-  useEffect(() => {
-    if (isHovering) return
+    dispatch({ type: 'GO_TO', index })
+  }, [])
 
-    const intervalId = setInterval(goToNext, autoPlayInterval)
-    return () => clearInterval(intervalId)
-  }, [currentIndex, isHovering, goToNext])
+  const setIsHovering = useCallback((isHovering: boolean) => {
+    dispatch({ type: 'SET_HOVER', isHovering })
+  }, [])
+
+  // Auto-play using ref-based timer
+  useEffect(() => {
+    if (state.isHovering) {
+      if (autoPlayTimerRef.current) {
+        clearInterval(autoPlayTimerRef.current)
+        autoPlayTimerRef.current = null
+      }
+      return
+    }
+
+    autoPlayTimerRef.current = setInterval(goToNext, 6000)
+
+    return () => {
+      if (autoPlayTimerRef.current) {
+        clearInterval(autoPlayTimerRef.current)
+      }
+    }
+  }, [state.isHovering, goToNext])
 
   // Keyboard navigation
   useEffect(() => {
@@ -79,44 +102,30 @@ export function DesktopSlideshow({ items }: DesktopSlideshowProps) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [goToNext, goToPrevious])
 
-  // Touch handlers with better vertical scroll detection
+  // Touch handlers
   const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(0)
-    setTouchStart(e.targetTouches[0].clientX)
+    touchStartX.current = e.targetTouches[0].clientX
     touchStartY.current = e.targetTouches[0].clientY
   }
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX)
-    touchMoveY.current = e.targetTouches[0].clientY
-  }
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const touchEndX = e.changedTouches[0].clientX
+    const touchEndY = e.changedTouches[0].clientY
 
-  const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return
-
-    const horizontalDistance = touchStart - touchEnd
-    const verticalDistance = Math.abs(touchStartY.current - touchMoveY.current)
+    const horizontalDistance = touchStartX.current - touchEndX
+    const verticalDistance = Math.abs(touchStartY.current - touchEndY)
 
     // Only trigger horizontal swipe if horizontal movement is greater than vertical
     if (
       Math.abs(horizontalDistance) > verticalDistance &&
       Math.abs(horizontalDistance) > minSwipeDistance
     ) {
-      const isLeftSwipe = horizontalDistance > 0
-      const isRightSwipe = horizontalDistance < 0
-
-      if (isLeftSwipe) {
+      if (horizontalDistance > 0) {
         goToNext()
-      } else if (isRightSwipe) {
+      } else {
         goToPrevious()
       }
     }
-
-    // Reset
-    setTouchStart(0)
-    setTouchEnd(0)
-    touchStartY.current = 0
-    touchMoveY.current = 0
   }
 
   return (
@@ -124,24 +133,24 @@ export function DesktopSlideshow({ items }: DesktopSlideshowProps) {
       <div className="relative">
         {/* Main Slideshow Container */}
         <div
-          className="relative h-[60vh] md:h-[70vh] min-h-[500px] md:min-h-[600px] max-h-[800px] overflow-hidden"
+          className="relative min-h-[500px] md:min-h-[600px] max-h-[800px] overflow-hidden"
+          style={{ height: '60dvh' }}
           onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
           {/* Slides */}
           <div className="relative h-full">
             {items.map((item, index) => {
               // Virtual sliding window: Only render current, previous, and next slides
-              const distance = Math.abs(index - currentIndex)
+              const distance = Math.abs(index - state.currentIndex)
               const shouldRender =
                 distance <= 1 ||
-                (currentIndex === 0 && index === items.length - 1) ||
-                (currentIndex === items.length - 1 && index === 0)
-              const isVisible = index === currentIndex
+                (state.currentIndex === 0 && index === items.length - 1) ||
+                (state.currentIndex === items.length - 1 && index === 0)
+              const isVisible = index === state.currentIndex
 
               if (!shouldRender) {
-                return null // Don't render distant slides
+                return null
               }
 
               return (
@@ -207,7 +216,7 @@ export function DesktopSlideshow({ items }: DesktopSlideshowProps) {
               key={item.slug}
               onClick={() => goToSlide(index)}
               className={`group relative aspect-video overflow-hidden border-2 transition-all duration-300 cursor-pointer ${
-                index === currentIndex
+                index === state.currentIndex
                   ? 'border-accent scale-105'
                   : 'border-white/20 opacity-60 hover:opacity-100 hover:border-white/40'
               }`}
@@ -225,7 +234,7 @@ export function DesktopSlideshow({ items }: DesktopSlideshowProps) {
                   />
                   <div
                     className={`absolute inset-0 bg-black/40 transition-all duration-300 ${
-                      index === currentIndex ? 'bg-black/0' : 'group-hover:bg-black/20'
+                      index === state.currentIndex ? 'bg-black/0' : 'group-hover:bg-black/20'
                     }`}
                   />
                 </>
@@ -239,7 +248,7 @@ export function DesktopSlideshow({ items }: DesktopSlideshowProps) {
               </div>
 
               {/* Active Indicator */}
-              {index === currentIndex && (
+              {index === state.currentIndex && (
                 <div className="absolute top-2 right-2 w-2 h-2 bg-accent shadow-lg shadow-accent/50" />
               )}
             </button>
@@ -249,7 +258,8 @@ export function DesktopSlideshow({ items }: DesktopSlideshowProps) {
         {/* Slide Counter */}
         <div className="absolute top-4 right-4 md:top-6 md:right-6 lg:top-8 lg:right-8 z-20 bg-black/40 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2">
           <span className="text-white text-sm md:text-base font-medium tabular-nums">
-            {String(currentIndex + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}
+            {String(state.currentIndex + 1).padStart(2, '0')} /{' '}
+            {String(items.length).padStart(2, '0')}
           </span>
         </div>
       </div>

@@ -1,9 +1,8 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useReducer, useCallback, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-//import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { PortfolioItem } from '../types'
 import { blurDataURLs } from '@/lib/blurDataURL'
 
@@ -11,58 +10,111 @@ interface MobileSlideshowProps {
   items: PortfolioItem[]
 }
 
-export function MobileSlideshow({ items }: MobileSlideshowProps) {
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [touchStart, setTouchStart] = useState(0)
-  const [touchEnd, setTouchEnd] = useState(0)
-  const [isHovering, setIsHovering] = useState(false)
+// Use reducer instead of multiple useState calls
+type State = {
+  currentIndex: number
+  isHovering: boolean
+}
 
-  // Minimum swipe distance (in px) to trigger slide change
+type Action =
+  | { type: 'NEXT' }
+  | { type: 'PREV' }
+  | { type: 'GO_TO'; index: number }
+  | { type: 'SET_HOVER'; isHovering: boolean }
+
+// Module-level variable
+let itemsLength = 0
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'NEXT':
+      return { ...state, currentIndex: (state.currentIndex + 1) % itemsLength }
+    case 'PREV':
+      return {
+        ...state,
+        currentIndex: state.currentIndex === 0 ? itemsLength - 1 : state.currentIndex - 1,
+      }
+    case 'GO_TO':
+      return { ...state, currentIndex: action.index }
+    case 'SET_HOVER':
+      return { ...state, isHovering: action.isHovering }
+    default:
+      return state
+  }
+}
+
+export function MobileSlideshow({ items }: MobileSlideshowProps) {
+  itemsLength = items.length
+
+  const [state, dispatch] = useReducer(reducer, {
+    currentIndex: 0,
+    isHovering: false,
+  })
+
+  const touchStartX = useRef(0)
+  const touchStartY = useRef(0)
+  const autoPlayTimerRef = useRef<NodeJS.Timeout | null>(null)
+
   const minSwipeDistance = 50
 
-  // Auto-play interval (5 seconds)
-  const autoPlayInterval = 5000
-
   const goToNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev === items.length - 1 ? 0 : prev + 1))
-  }, [items.length])
-
-  const goToPrevious = useCallback(() => {
-    setCurrentIndex((prev) => (prev === 0 ? items.length - 1 : prev - 1))
-  }, [items.length])
-
-  const goToSlide = useCallback((index: number) => {
-    setCurrentIndex(index)
+    dispatch({ type: 'NEXT' })
   }, [])
 
-  // Auto-play functionality
+  const goToPrevious = useCallback(() => {
+    dispatch({ type: 'PREV' })
+  }, [])
+
+  const goToSlide = useCallback((index: number) => {
+    dispatch({ type: 'GO_TO', index })
+  }, [])
+
+  const setIsHovering = useCallback((isHovering: boolean) => {
+    dispatch({ type: 'SET_HOVER', isHovering })
+  }, [])
+
+  // Auto-play using ref-based timer
   useEffect(() => {
-    if (isHovering) return
+    if (state.isHovering) {
+      if (autoPlayTimerRef.current) {
+        clearInterval(autoPlayTimerRef.current)
+        autoPlayTimerRef.current = null
+      }
+      return
+    }
 
-    const intervalId = setInterval(goToNext, autoPlayInterval)
-    return () => clearInterval(intervalId)
-  }, [currentIndex, isHovering, goToNext, autoPlayInterval])
+    autoPlayTimerRef.current = setInterval(goToNext, 5000)
 
+    return () => {
+      if (autoPlayTimerRef.current) {
+        clearInterval(autoPlayTimerRef.current)
+      }
+    }
+  }, [state.isHovering, goToNext])
+
+  // Touch handlers
   const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(0)
-    setTouchStart(e.targetTouches[0].clientX)
+    touchStartX.current = e.targetTouches[0].clientX
+    touchStartY.current = e.targetTouches[0].clientY
   }
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX)
-  }
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const touchEndX = e.changedTouches[0].clientX
+    const touchEndY = e.changedTouches[0].clientY
 
-  const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return
+    const horizontalDistance = touchStartX.current - touchEndX
+    const verticalDistance = Math.abs(touchStartY.current - touchEndY)
 
-    const distance = touchStart - touchEnd
-    const isLeftSwipe = distance > minSwipeDistance
-    const isRightSwipe = distance < -minSwipeDistance
-
-    if (isLeftSwipe) {
-      goToNext()
-    } else if (isRightSwipe) {
-      goToPrevious()
+    // Only trigger horizontal swipe if horizontal movement is greater than vertical
+    if (
+      Math.abs(horizontalDistance) > verticalDistance &&
+      Math.abs(horizontalDistance) > minSwipeDistance
+    ) {
+      if (horizontalDistance > 0) {
+        goToNext()
+      } else {
+        goToPrevious()
+      }
     }
   }
 
@@ -77,37 +129,36 @@ export function MobileSlideshow({ items }: MobileSlideshowProps) {
         <div
           className="overflow-hidden"
           onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
           <div
             className="flex transition-transform duration-700 ease-out"
-            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+            style={{ transform: `translateX(-${state.currentIndex * 100}%)` }}
           >
-            {items.map((card, index) => (
-              <div key={card.slug} className="w-full shrink-0">
-                <Slide card={card} isFirst={index === 0} />
-              </div>
-            ))}
+            {items.map((card, index) => {
+              // Only render current slide and adjacent slides (prev/next)
+              // This prevents loading all images at once during SSR
+              const prevIndex = state.currentIndex === 0 ? items.length - 1 : state.currentIndex - 1
+              const nextIndex = state.currentIndex === items.length - 1 ? 0 : state.currentIndex + 1
+              const shouldRender =
+                index === state.currentIndex || index === prevIndex || index === nextIndex
+
+              return (
+                <div key={card.slug} className="w-full shrink-0">
+                  {shouldRender ? (
+                    <Slide card={card} isFirst={index === 0} />
+                  ) : (
+                    // Placeholder for unrendered slides to maintain layout
+                    <div
+                      className="relative min-h-[600px] max-h-[800px] bg-background"
+                      style={{ height: '85dvh' }}
+                    />
+                  )}
+                </div>
+              )
+            })}
           </div>
         </div>
-
-        {/* Navigation Arrows - Elegant minimal design */}
-        {/*<button
-          onClick={goToPrevious}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-black/40 backdrop-blur-md hover:bg-black/60 rounded-full p-3 transition-all duration-300 group"
-          aria-label="Previous slide"
-        >
-          <ChevronLeft className="h-6 w-6 text-white group-hover:scale-110 transition-transform" />
-        </button>
-
-        <button
-          onClick={goToNext}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-black/40 backdrop-blur-md hover:bg-black/60 rounded-full p-3 transition-all duration-300 group"
-          aria-label="Next slide"
-        >
-          <ChevronRight className="h-6 w-6 text-white group-hover:scale-110 transition-transform" />
-        </button>*/}
 
         {/* Minimal Progress Bars */}
         <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-2 px-4 z-10">
@@ -120,7 +171,7 @@ export function MobileSlideshow({ items }: MobileSlideshowProps) {
             >
               <div
                 className={`h-full bg-accent transition-all duration-300 ${
-                  index === currentIndex ? 'w-full' : 'w-0'
+                  index === state.currentIndex ? 'w-full' : 'w-0'
                 }`}
               />
             </button>
@@ -140,7 +191,10 @@ interface SlideProps {
 function Slide({ card, isFirst }: SlideProps) {
   return (
     <Link href={`/portfolio/${card.slug}`} className="block relative group">
-      <div className="relative h-[85vh] min-h-[600px] max-h-[800px] overflow-hidden">
+      <div
+        className="relative min-h-[600px] max-h-[800px] overflow-hidden"
+        style={{ height: '85dvh' }}
+      >
         {/* Full-screen Image with Overlay */}
         {card.metadata.image && (
           <>
@@ -156,7 +210,7 @@ function Slide({ card, isFirst }: SlideProps) {
               loading={isFirst ? 'eager' : 'lazy'}
             />
             {/* Gradient Overlay for readability */}
-            <div className="absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
           </>
         )}
 
