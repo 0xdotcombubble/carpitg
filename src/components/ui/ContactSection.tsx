@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState } from 'react'
-import { Mail, Phone, MapPin, Clock } from 'lucide-react'
+import React, { useState, useEffect, useRef } from 'react'
+import { Mail, Phone, MapPin, Clock, CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
 import Image from 'next/image'
 import { SiteSettings } from './types'
 import { blurDataURLs } from '@/lib/blurDataURL'
@@ -17,6 +17,27 @@ interface ContactSectionProps {
   siteSettings: SiteSettings
 }
 
+type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error'
+
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (
+        element: HTMLElement,
+        options: {
+          sitekey: string
+          callback: (token: string) => void
+          'error-callback': () => void
+          theme?: 'light' | 'dark'
+          size?: 'normal' | 'compact'
+        },
+      ) => string
+      reset: (widgetId: string) => void
+      remove: (widgetId: string) => void
+    }
+  }
+}
+
 const ContactSection = React.memo<ContactSectionProps>(({ siteSettings }) => {
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
@@ -24,6 +45,46 @@ const ContactSection = React.memo<ContactSectionProps>(({ siteSettings }) => {
     phone: '',
     message: '',
   })
+  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>('idle')
+  const [statusMessage, setStatusMessage] = useState<string>('')
+  const [turnstileToken, setTurnstileToken] = useState<string>('')
+  const turnstileRef = useRef<HTMLDivElement>(null)
+  const turnstileWidgetId = useRef<string>('')
+
+  // Load Turnstile script
+  useEffect(() => {
+    const script = document.createElement('script')
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
+    script.async = true
+    script.defer = true
+    script.onload = () => {
+      if (turnstileRef.current && window.turnstile) {
+        turnstileWidgetId.current = window.turnstile.render(turnstileRef.current, {
+          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '',
+          callback: (token: string) => {
+            setTurnstileToken(token)
+          },
+          'error-callback': () => {
+            setTurnstileToken('')
+            setStatusMessage('Bot ellenőrzési hiba történt. Kérjük, frissítsd az oldalt.')
+            setSubmitStatus('error')
+          },
+          theme: 'dark',
+          size: 'normal',
+        })
+      }
+    }
+    document.head.appendChild(script)
+
+    return () => {
+      if (window.turnstile && turnstileWidgetId.current) {
+        window.turnstile.remove(turnstileWidgetId.current)
+      }
+      if (script.parentNode) {
+        script.parentNode.removeChild(script)
+      }
+    }
+  }, [])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -33,17 +94,74 @@ const ContactSection = React.memo<ContactSectionProps>(({ siteSettings }) => {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
 
-    // Reset form after submission
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      message: '',
-    })
+    if (!turnstileToken) {
+      setStatusMessage('Kérjük, végezd el a bot ellenőrzést.')
+      setSubmitStatus('error')
+      return
+    }
+
+    setSubmitStatus('submitting')
+    setStatusMessage('')
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          turnstileToken,
+        }),
+      })
+
+      const data = (await response.json()) as {
+        success?: boolean
+        message?: string
+        error?: string
+      }
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Hiba történt az üzenet küldése közben')
+      }
+
+      setSubmitStatus('success')
+      setStatusMessage(data.message || 'Üzeneted sikeresen elküldve!')
+
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        message: '',
+      })
+
+      // Reset Turnstile
+      if (window.turnstile && turnstileWidgetId.current) {
+        window.turnstile.reset(turnstileWidgetId.current)
+      }
+      setTurnstileToken('')
+
+      // Clear success message after 5 seconds
+      setTimeout(() => {
+        setSubmitStatus('idle')
+        setStatusMessage('')
+      }, 5000)
+    } catch (error) {
+      setSubmitStatus('error')
+      setStatusMessage(
+        error instanceof Error ? error.message : 'Hiba történt az üzenet küldése közben',
+      )
+
+      // Reset Turnstile on error
+      if (window.turnstile && turnstileWidgetId.current) {
+        window.turnstile.reset(turnstileWidgetId.current)
+      }
+      setTurnstileToken('')
+    }
   }
 
   return (
@@ -139,8 +257,31 @@ const ContactSection = React.memo<ContactSectionProps>(({ siteSettings }) => {
 
           <form
             onSubmit={handleSubmit}
-            className="space-y-6 bg-[#1A1A1A] p-8 rounded-lg border border-white/10"
+            className="space-y-6 bg-[#1A1A1A] p-8 border border-white/10"
           >
+            {statusMessage && (
+              <div
+                className={`p-4 flex items-start gap-3 ${
+                  submitStatus === 'success'
+                    ? 'bg-green-500/10 border border-green-500/20'
+                    : 'bg-red-500/10 border border-red-500/20'
+                }`}
+              >
+                {submitStatus === 'success' ? (
+                  <CheckCircle className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
+                ) : (
+                  <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                )}
+                <p
+                  className={`text-sm ${
+                    submitStatus === 'success' ? 'text-green-500' : 'text-red-500'
+                  }`}
+                >
+                  {statusMessage}
+                </p>
+              </div>
+            )}
+
             <div>
               <label htmlFor="name" className="block text-sm font-semibold text-white mb-2">
                 Név
@@ -151,9 +292,10 @@ const ContactSection = React.memo<ContactSectionProps>(({ siteSettings }) => {
                 type="text"
                 value={formData.name}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-[#0D0D0D] border border-white/20 rounded-sm text-white placeholder-white/50 focus:border-accent focus:outline-none transition"
+                className="w-full px-4 py-3 bg-[#0D0D0D] border border-white/20 text-white placeholder-white/50 focus:border-accent focus:outline-none transition"
                 placeholder="Teljes név"
                 required
+                disabled={submitStatus === 'submitting'}
               />
             </div>
 
@@ -167,9 +309,10 @@ const ContactSection = React.memo<ContactSectionProps>(({ siteSettings }) => {
                 type="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-[#0D0D0D] border border-white/20 rounded-sm text-white placeholder-white/50 focus:border-accent focus:outline-none transition"
+                className="w-full px-4 py-3 bg-[#0D0D0D] border border-white/20 text-white placeholder-white/50 focus:border-accent focus:outline-none transition"
                 placeholder="email@example.com"
                 required
+                disabled={submitStatus === 'submitting'}
               />
             </div>
 
@@ -183,8 +326,9 @@ const ContactSection = React.memo<ContactSectionProps>(({ siteSettings }) => {
                 type="tel"
                 value={formData.phone}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-[#0D0D0D] border border-white/20 rounded-sm text-white placeholder-white/50 focus:border-accent focus:outline-none transition"
+                className="w-full px-4 py-3 bg-[#0D0D0D] border border-white/20 text-white placeholder-white/50 focus:border-accent focus:outline-none transition"
                 placeholder="+36 00 XXX XXXX"
+                disabled={submitStatus === 'submitting'}
               />
             </div>
 
@@ -197,17 +341,29 @@ const ContactSection = React.memo<ContactSectionProps>(({ siteSettings }) => {
                 name="message"
                 value={formData.message}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-[#0D0D0D] border border-white/20 rounded-sm text-white placeholder-white/50 focus:border-accent focus:outline-none transition resize-none h-32"
+                className="w-full px-4 py-3 bg-[#0D0D0D] border border-white/20 text-white placeholder-white/50 focus:border-accent focus:outline-none transition resize-none h-32"
                 placeholder="Írd le az autód típusát és az igényeidet..."
                 required
+                disabled={submitStatus === 'submitting'}
               />
             </div>
 
+            {/* Turnstile Widget */}
+            <div ref={turnstileRef} className="flex justify-center"></div>
+
             <button
               type="submit"
-              className="w-full px-6 py-4 bg-accent text-white font-semibold rounded-sm hover:bg-accent/90 transition"
+              disabled={submitStatus === 'submitting' || !turnstileToken}
+              className="w-full px-6 py-4 bg-accent text-white font-semibold hover:bg-accent/90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              Üzenet küldése
+              {submitStatus === 'submitting' ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Küldés...
+                </>
+              ) : (
+                'Üzenet küldése'
+              )}
             </button>
           </form>
         </div>

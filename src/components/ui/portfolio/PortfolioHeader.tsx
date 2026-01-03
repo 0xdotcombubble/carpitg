@@ -12,11 +12,8 @@ export function PortfolioHeader() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">Kiváló Munkáink</h2>
-        <p className="text-white/70 leading-relaxed">
-          Büszkék vagyunk minden elvégzett munkánkra. Húzd el a kártyát bármelyik irányba, hogy lásd
-          a következő projektet.
-        </p>
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">Referenciák</h2>
+        <p className="text-white/70 leading-relaxed">Büszkék vagyunk minden elvégzett munkánkra.</p>
       </div>
     </div>
   )

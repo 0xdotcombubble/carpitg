@@ -13,7 +13,7 @@ export function PricingHeader() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">
-          Transzparens Árképzés
+          Külső - Belső csomag ajánlatok
         </h2>
         <p className="text-white/70 leading-relaxed">
           Válassz a csomagjaink közül - mindegyik tartalmazza az anyagköltséget és a munkadíjat.

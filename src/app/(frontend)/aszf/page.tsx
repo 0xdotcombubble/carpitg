@@ -1,7 +1,8 @@
 import React from 'react'
 import Link from 'next/link'
+import { Metadata } from 'next'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Általános Szerződési Feltételek - CarPit Garage',
   description: 'A CarPit Garage autókozmetika szolgáltatásainak általános szerződési feltételei',
 }
@@ -97,23 +98,10 @@ export default function ASZFPage() {
               vagy az Ügyfél által nem jelentett problémákért.
             </p>
             <p className="text-white/80 mb-4">
-              Az Ügyfél köteles a járműben lévő értékeket elvinni vagy biztonságos helyen tárolni.
-              A Szolgáltató nem vállal felelősséget a járműben hagyott tárgyakért.
+              Az Ügyfél köteles a járműben lévő értékeket elvinni vagy biztonságos helyen tárolni. A
+              Szolgáltató nem vállal felelősséget a járműben hagyott tárgyakért.
             </p>
           </section>
-
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-4">7. Szavatosság és garancia</h2>
-            <p className="text-white/80 mb-4">
-              A Szolgáltató szavatosságot vállal az elvégzett munkák minőségéért. Reklamáció esetén
-              a Szolgáltató megvizsgálja a problémát és szükség esetén díjmentesen javítja a hibát.
-            </p>
-            <p className="text-white/80 mb-4">
-              Bizonyos szolgáltatásokra (pl. kerámia bevonat) külön garanciális feltételek
-              vonatkoznak, amelyeket a Szolgáltató írásban közöl az Ügyféllel.
-            </p>
-          </section>
-
           <section className="mb-12">
             <h2 className="text-2xl font-bold text-white mb-4">8. Adatvédelem</h2>
             <p className="text-white/80 mb-4">
@@ -132,15 +120,13 @@ export default function ASZFPage() {
               Törvénykönyv rendelkezései az irányadók.
             </p>
             <p className="text-white/80 mb-4">
-              A Szolgáltató fenntartja a jogot a jelen ÁSZF módosítására. A módosítások a
-              weboldalon történő közzététellel lépnek hatályba.
+              A Szolgáltató fenntartja a jogot a jelen ÁSZF módosítására. A módosítások a weboldalon
+              történő közzététellel lépnek hatályba.
             </p>
           </section>
 
           <section className="mb-12">
-            <p className="text-white/60 text-sm">
-              Utolsó frissítés: 2025. január 1.
-            </p>
+            <p className="text-white/60 text-sm">Utolsó frissítés: 2026. január 1.</p>
           </section>
         </div>
 

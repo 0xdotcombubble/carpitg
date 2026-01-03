@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import Link from 'next/link'
 import Image from 'next/image'
 import { PortfolioItem } from '../types'
 import { blurDataURLs } from '@/lib/blurDataURL'
@@ -61,9 +60,7 @@ export function DesktopSlideshow({ items }: DesktopSlideshowProps) {
 
   const goToSlide = useCallback((index: number) => {
     setCurrentIndex(index)
-  }, [])
-
-  // Auto-play functionality
+  }, []) // Auto-play functionality
   useEffect(() => {
     if (isHovering) return
 
@@ -154,11 +151,7 @@ export function DesktopSlideshow({ items }: DesktopSlideshowProps) {
                     isVisible ? 'opacity-100 z-10' : 'opacity-0 z-0'
                   }`}
                 >
-                  <Link
-                    href={`/portfolio/${item.slug}`}
-                    className="block h-full group"
-                    prefetch={true}
-                  >
+                  <div className="h-full">
                     {/* Image */}
                     {item.metadata.image && (
                       <>
@@ -180,8 +173,8 @@ export function DesktopSlideshow({ items }: DesktopSlideshowProps) {
                     )}
 
                     {/* Content Overlay */}
-                    <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-8 md:p-12 lg:p-16 pointer-events-none">
-                      <div className="max-w-3xl pointer-events-auto">
+                    <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-8 md:p-12 lg:p-16">
+                      <div className="max-w-3xl">
                         {/* Category Badge */}
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-white/10 backdrop-blur-md mb-4 md:mb-6">
                           <span className="text-xs md:text-sm font-medium tracking-wider uppercase text-white/90">
@@ -190,37 +183,17 @@ export function DesktopSlideshow({ items }: DesktopSlideshowProps) {
                         </div>
 
                         {/* Title */}
-                        <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 md:mb-4 group-hover:text-accent transition-colors duration-300">
+                        <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 md:mb-4">
                           {item.metadata.title}
                         </h3>
 
                         {/* Description */}
-                        <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/80 font-light leading-relaxed mb-6 md:mb-8 line-clamp-2 md:line-clamp-3">
+                        <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/80 font-light leading-relaxed line-clamp-2 md:line-clamp-3">
                           {item.metadata.description}
                         </p>
-
-                        {/* View More */}
-                        <div className="inline-flex items-center gap-2 md:gap-3 text-white/70 group-hover:text-accent transition-colors duration-300">
-                          <span className="text-sm md:text-base font-medium">
-                            Részletek megtekintése
-                          </span>
-                          <svg
-                            className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform duration-300"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 5l7 7-7 7"
-                            />
-                          </svg>
-                        </div>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 </div>
               )
             })}
@@ -233,7 +206,7 @@ export function DesktopSlideshow({ items }: DesktopSlideshowProps) {
             <button
               key={item.slug}
               onClick={() => goToSlide(index)}
-              className={`group relative aspect-video overflow-hidden border-2 transition-all duration-300 ${
+              className={`group relative aspect-video overflow-hidden border-2 transition-all duration-300 cursor-pointer ${
                 index === currentIndex
                   ? 'border-accent scale-105'
                   : 'border-white/20 opacity-60 hover:opacity-100 hover:border-white/40'

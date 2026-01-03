@@ -2,8 +2,6 @@ import React from 'react'
 import { PortfolioItem } from './types'
 import { PortfolioHeader } from './portfolio/PortfolioHeader'
 import { DesktopSlideshow } from './portfolio/DesktopSlideshow'
-import { PortfolioFooter } from './portfolio/PortfolioFooter'
-import { PortfolioPrefetch } from './portfolio/PortfolioPrefetch'
 
 interface PortfolioSectionProps {
   portfolioItems?: PortfolioItem[]
@@ -23,17 +21,11 @@ const PortfolioSection = React.memo<PortfolioSectionProps>(
 
     return (
       <section id="portfolio" className="relative bg-background">
-        {/* Prefetch all portfolio pages for instant navigation */}
-        <PortfolioPrefetch items={portfolioItems} />
-
         {/* Header Section */}
         <PortfolioHeader />
 
         {/* Slideshow with Thumbnails - Full width on mobile, constrained on desktop */}
         <DesktopSlideshow items={portfolioItems} />
-
-        {/* Footer Section */}
-        <PortfolioFooter />
       </section>
     )
   },

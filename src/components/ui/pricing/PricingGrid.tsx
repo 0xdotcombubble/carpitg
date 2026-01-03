@@ -1,5 +1,4 @@
 import React from 'react'
-import Link from 'next/link'
 import { Check, DollarSign, Star, Crown } from 'lucide-react'
 import { PricingItem } from '../types'
 
@@ -33,9 +32,7 @@ export function PricingGrid({ items }: PricingGridProps) {
             {/* Popular Badge */}
             {isPopular && (
               <div className="absolute -top-3 right-6">
-                <span className="bg-accent text-white text-xs font-bold px-4 py-1">
-                  NÉPSZERŰ
-                </span>
+                <span className="bg-accent text-white text-xs font-bold px-4 py-1">NÉPSZERŰ</span>
               </div>
             )}
 
@@ -56,9 +53,7 @@ export function PricingGrid({ items }: PricingGridProps) {
             {/* Price */}
             <div className="p-6 border-b border-white/10">
               <div className="flex items-baseline gap-2">
-                <span
-                  className={`text-4xl font-bold ${isPopular ? 'text-accent' : 'text-white'}`}
-                >
+                <span className={`text-4xl font-bold ${isPopular ? 'text-accent' : 'text-white'}`}>
                   {item.metadata.price}
                 </span>
                 {item.metadata.duration && (
@@ -79,21 +74,6 @@ export function PricingGrid({ items }: PricingGridProps) {
                   </div>
                 ))}
               </div>
-            </div>
-
-            {/* CTA */}
-            <div className="p-6 border-t border-white/10">
-              <Link
-                href={`/pricing/${item.slug}`}
-                className="flex items-center justify-between group"
-              >
-                <span className="text-sm text-white/70 group-hover:text-accent transition-colors">
-                  Részletek
-                </span>
-                <div className="w-8 h-8 border border-white/20 group-hover:border-accent group-hover:bg-accent flex items-center justify-center transition-all">
-                  <span className="text-white">→</span>
-                </div>
-              </Link>
             </div>
           </div>
         )

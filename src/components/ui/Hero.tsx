@@ -61,23 +61,23 @@ const Hero: React.FC<HeroProps> = ({ siteSettings }) => {
               href={`tel:${siteSettings.phone}`}
               className="group px-8 sm:px-10 py-4 sm:py-5 bg-accent text-white font-semibold text-base sm:text-lg border-2 border-accent hover:bg-transparent hover:text-accent transition-all duration-300 flex items-center justify-center gap-3 shadow-2xl hover:shadow-accent/20 w-full sm:w-auto"
             >
-              <span>Kapcsolat</span>
+              <span>Hívás</span>
               <ChevronRight
                 size={18}
                 className="group-hover:translate-x-1 transition-transform duration-300"
               />
             </a>
             <a
-              href="#portfolio"
+              href="#contact"
               className="px-8 sm:px-10 py-4 sm:py-5 text-white font-medium text-base sm:text-lg hover:bg-white/5 transition-all duration-300 border-2 border-white/30 hover:border-white/60 backdrop-blur-sm w-full sm:w-auto"
             >
-              Portfólió
+              Kapcsolat
             </a>
             <a
-              href="#services"
+              href="#pricing"
               className="px-8 sm:px-10 py-4 sm:py-5 text-white font-medium text-base sm:text-lg hover:bg-white/5 transition-all duration-300 border-2 border-white/30 hover:border-white/60 backdrop-blur-sm w-full sm:w-auto"
             >
-              Szolgáltatások
+              Csomagok
             </a>
           </div>
         </div>
