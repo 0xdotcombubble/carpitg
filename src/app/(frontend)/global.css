@@ -98,3 +98,8 @@ section {
     padding-bottom: 12rem;
   }
 }
+
+/* Hero logo accent color filter - optimized for performance */
+.logo-accent-filter {
+  filter: invert(27%) sepia(96%) saturate(5471%) hue-rotate(355deg) brightness(104%) contrast(94%);
+}

@@ -84,9 +84,9 @@ export function MobileSlideshow({ items }: MobileSlideshowProps) {
             className="flex transition-transform duration-700 ease-out"
             style={{ transform: `translateX(-${currentIndex * 100}%)` }}
           >
-            {items.map((card) => (
+            {items.map((card, index) => (
               <div key={card.slug} className="w-full shrink-0">
-                <Slide card={card} />
+                <Slide card={card} isFirst={index === 0} />
               </div>
             ))}
           </div>
@@ -134,9 +134,10 @@ export function MobileSlideshow({ items }: MobileSlideshowProps) {
 // Modern, elegant slide design
 interface SlideProps {
   card: PortfolioItem
+  isFirst: boolean
 }
 
-function Slide({ card }: SlideProps) {
+function Slide({ card, isFirst }: SlideProps) {
   return (
     <Link href={`/portfolio/${card.slug}`} className="block relative group">
       <div className="relative h-[85vh] min-h-[600px] max-h-[800px] overflow-hidden">
@@ -151,7 +152,8 @@ function Slide({ card }: SlideProps) {
               className="object-cover"
               placeholder="blur"
               blurDataURL={blurDataURLs.darker}
-              priority
+              priority={isFirst}
+              loading={isFirst ? 'eager' : 'lazy'}
             />
             {/* Gradient Overlay for readability */}
             <div className="absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent" />

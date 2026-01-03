@@ -1,4 +1,3 @@
-import { withNextVideo } from "next-video/process";
 import { withPayload } from '@payloadcms/next/withPayload'
 import type { NextConfig } from 'next'
 
@@ -11,28 +10,47 @@ const nextConfig: NextConfig = {
   // Your Next.js config here
   experimental: {
     reactCompiler: true, // Enable React Compiler for automatic memoization
+    staleTimes: {
+      dynamic: 0, // Don't cache dynamic pages (Payload admin needs fresh data)
+      static: 180, // Cache static pages for 3 minutes
+    },
+  },
+  async headers() {
+    return [
+      {
+        source: '/:all*(svg|jpg|jpeg|png|gif|webp|mp4)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ]
   },
   images: {
-    formats: ['image/avif', 'image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200], // Mobile-first sizes
-    imageSizes: [16, 32, 48, 64, 96, 128, 256], // Smaller default sizes
-    minimumCacheTTL: 60,
+    unoptimized: true, // Required for Cloudflare Workers - R2 images served directly
     remotePatterns: [
       {
         protocol: 'https' as const,
+        hostname: '**.r2.cloudflarestorage.com',
+      },
+      {
+        protocol: 'https' as const,
+        hostname: 'pub-*.r2.dev',
+      },
+      {
+        protocol: 'https' as const,
         hostname: 'carpitgarage.hu',
-        pathname: '/api/media/file/**',
       },
       {
         protocol: 'https' as const,
         hostname: 'carpitg.raphael-varszegi.workers.dev',
-        pathname: '/api/media/file/**',
       },
       {
         protocol: 'http' as const,
         hostname: 'localhost',
         port: '3000',
-        pathname: '/api/media/file/**',
       },
     ],
   },
@@ -47,6 +65,4 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default withNextVideo(
-  withBundleAnalyzer(withPayload(nextConfig, { devBundleServerPackages: false }))
-);
+export default withBundleAnalyzer(withPayload(nextConfig, { devBundleServerPackages: false }))

@@ -3,9 +3,13 @@ import { notFound } from 'next/navigation'
 import { getPricingBySlug, getPricing } from '@/lib/getPageData'
 import Image from 'next/image'
 import Link from 'next/link'
+import { BackNavigation } from '@/components/ui/BackNavigation'
 
 // Enable dynamic params (allows routes not in generateStaticParams)
 export const dynamicParams = true
+
+// Revalidate every hour (ISR)
+export const revalidate = 3600
 
 // Generate static params for all pricing items
 export async function generateStaticParams() {
@@ -49,6 +53,9 @@ export default async function PricingPage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Back Navigation */}
+      <BackNavigation href="/#pricing" label="Vissza az árakhoz" />
+
       {/* Header */}
       <div className="relative h-[40vh] min-h-[300px] bg-linear-to-t from-background to-background/80">
         {metadata.image && (
@@ -56,8 +63,10 @@ export default async function PricingPage({ params }: { params: Promise<{ slug: 
             src={metadata.image}
             alt={metadata.title}
             fill
+            sizes="100vw"
             className="object-cover opacity-20"
             priority
+            quality={75}
           />
         )}
         <div className="absolute inset-0 flex items-center justify-center">
@@ -76,7 +85,7 @@ export default async function PricingPage({ params }: { params: Promise<{ slug: 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 py-16">
         {/* Price and Duration */}
-        <div className="bg-white/5 rounded-lg p-8 mb-12 text-center">
+        <div className="bg-white/5 p-8 mb-12 text-center">
           <p className="text-5xl font-bold text-accent mb-2">{metadata.price}</p>
           {metadata.duration && <p className="text-white/60">Időtartam: {metadata.duration}</p>}
         </div>
@@ -120,7 +129,7 @@ export default async function PricingPage({ params }: { params: Promise<{ slug: 
             <h2 className="text-2xl font-bold text-white mb-6">Szolgáltatások</h2>
             <div className="grid md:grid-cols-2 gap-3">
               {metadata.services.map((service, index) => (
-                <div key={index} className="flex items-start bg-white/5 rounded-lg p-4">
+                <div key={index} className="flex items-start bg-white/5 p-4">
                   <svg
                     className="w-5 h-5 text-accent mr-3 mt-0.5 shrink-0"
                     fill="none"
@@ -147,7 +156,7 @@ export default async function PricingPage({ params }: { params: Promise<{ slug: 
             <h2 className="text-2xl font-bold text-white mb-4">Alkalmas járművek</h2>
             <div className="flex flex-wrap gap-2">
               {metadata.vehicleTypes.map((type, index) => (
-                <span key={index} className="bg-white/10 text-white px-4 py-2 rounded-full text-sm">
+                <span key={index} className="bg-white/10 text-white px-4 py-2 text-sm">
                   {type}
                 </span>
               ))}
@@ -158,7 +167,7 @@ export default async function PricingPage({ params }: { params: Promise<{ slug: 
         {/* Notes */}
         {metadata.notes && (
           <div className="mb-12">
-            <div className="bg-accent/10 border border-accent/20 rounded-lg p-6">
+            <div className="bg-accent/10 border border-accent/20 p-6">
               <h3 className="text-white font-semibold mb-2 flex items-center">
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -177,7 +186,7 @@ export default async function PricingPage({ params }: { params: Promise<{ slug: 
 
         {/* CTA */}
         <div className="border-t border-white/10 pt-12">
-          <div className="bg-white/5 rounded-lg p-8 text-center">
+          <div className="bg-white/5 p-8 text-center">
             <h3 className="text-2xl font-bold text-white mb-4">Foglald le időpontodat még ma!</h3>
             <p className="text-white/70 mb-6">
               Hívj minket vagy írj üzenetet, és egyeztessük a részleteket
@@ -185,36 +194,18 @@ export default async function PricingPage({ params }: { params: Promise<{ slug: 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="tel:+36703339809"
-                className="inline-block bg-accent text-white px-8 py-3 rounded-lg font-semibold hover:bg-accent/90 transition-colors"
+                className="inline-block bg-accent text-white px-8 py-3 font-semibold hover:bg-accent/90 transition-colors"
               >
                 +36 70 333 9809
               </a>
               <Link
                 href="/#contact"
-                className="inline-block border border-white/20 text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/5 transition-colors"
+                className="inline-block border border-white/20 text-white px-8 py-3 font-semibold hover:bg-white/5 transition-colors"
               >
                 Üzenet küldése
               </Link>
             </div>
           </div>
-        </div>
-
-        {/* Back link */}
-        <div className="mt-12 text-center">
-          <Link
-            href="/#pricing"
-            className="text-accent hover:text-accent/80 transition-colors inline-flex items-center gap-2"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            Vissza az árakhoz
-          </Link>
         </div>
       </div>
     </div>

@@ -3,9 +3,13 @@ import { notFound } from 'next/navigation'
 import { getServiceBySlug, getServices } from '@/lib/getPageData'
 import Image from 'next/image'
 import Link from 'next/link'
+import { BackNavigation } from '@/components/ui/BackNavigation'
 
 // Enable dynamic params (allows routes not in generateStaticParams)
 export const dynamicParams = true
+
+// Revalidate every hour (ISR)
+export const revalidate = 3600
 
 // Generate static params for all services
 export async function generateStaticParams() {
@@ -49,6 +53,9 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Back Navigation */}
+      <BackNavigation href="/#services" label="Vissza a szolgáltatásokhoz" />
+
       {/* Header */}
       <div className="relative h-[40vh] min-h-[300px] bg-linear-to-t from-background to-background/80">
         {metadata.image && (
@@ -56,8 +63,10 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             src={metadata.image}
             alt={metadata.title}
             fill
+            sizes="100vw"
             className="object-cover opacity-20"
             priority
+            quality={75}
           />
         )}
         <div className="absolute inset-0 flex items-center justify-center">
@@ -111,7 +120,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
 
         {/* CTA */}
         <div className="border-t border-white/10 pt-12">
-          <div className="bg-white/5 rounded-lg p-8 text-center">
+          <div className="bg-white/5 p-8 text-center">
             <h3 className="text-2xl font-bold text-white mb-4">Érdekel ez a szolgáltatás?</h3>
             <p className="text-white/70 mb-6">
               Vedd fel velünk a kapcsolatot időpont egyeztetéshez
@@ -119,36 +128,18 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="tel:+36703339809"
-                className="inline-block bg-accent text-white px-8 py-3 rounded-lg font-semibold hover:bg-accent/90 transition-colors"
+                className="inline-block bg-accent text-white px-8 py-3 font-semibold hover:bg-accent/90 transition-colors"
               >
                 Hívj most
               </a>
               <Link
                 href="/#contact"
-                className="inline-block border border-white/20 text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/5 transition-colors"
+                className="inline-block border border-white/20 text-white px-8 py-3 font-semibold hover:bg-white/5 transition-colors"
               >
                 Üzenet küldése
               </Link>
             </div>
           </div>
-        </div>
-
-        {/* Back link */}
-        <div className="mt-12 text-center">
-          <Link
-            href="/#services"
-            className="text-accent hover:text-accent/80 transition-colors inline-flex items-center gap-2"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            Vissza a szolgáltatásokhoz
-          </Link>
         </div>
       </div>
     </div>

@@ -11,12 +11,40 @@ interface DesktopSlideshowProps {
 }
 
 export function DesktopSlideshow({ items }: DesktopSlideshowProps) {
-  const [currentIndex, setCurrentIndex] = useState(0)
+  // Restore slideshow position from sessionStorage
+  const [currentIndex, setCurrentIndex] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = sessionStorage.getItem('portfolio-slideshow-index')
+      const index = saved ? parseInt(saved, 10) : 0
+      return index >= 0 && index < items.length ? index : 0
+    }
+    return 0
+  })
   const [isHovering, setIsHovering] = useState(false)
   const [touchStart, setTouchStart] = useState(0)
   const [touchEnd, setTouchEnd] = useState(0)
   const touchStartY = useRef(0)
   const touchMoveY = useRef(0)
+
+  // Save current index to sessionStorage
+  useEffect(() => {
+    sessionStorage.setItem('portfolio-slideshow-index', String(currentIndex))
+  }, [currentIndex])
+
+  // Preload all images to keep them in browser cache
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    items.forEach((item) => {
+      if (item.metadata.image) {
+        const link = document.createElement('link')
+        link.rel = 'prefetch'
+        link.as = 'image'
+        link.href = item.metadata.image
+        document.head.appendChild(link)
+      }
+    })
+  }, [items])
 
   // Auto-play interval (6 seconds)
   const autoPlayInterval = 6000
@@ -126,7 +154,11 @@ export function DesktopSlideshow({ items }: DesktopSlideshowProps) {
                     isVisible ? 'opacity-100 z-10' : 'opacity-0 z-0'
                   }`}
                 >
-                  <Link href={`/portfolio/${item.slug}`} className="block h-full group">
+                  <Link
+                    href={`/portfolio/${item.slug}`}
+                    className="block h-full group"
+                    prefetch={true}
+                  >
                     {/* Image */}
                     {item.metadata.image && (
                       <>
@@ -216,9 +248,7 @@ export function DesktopSlideshow({ items }: DesktopSlideshowProps) {
                     fill
                     sizes="300px"
                     className="object-cover"
-                    placeholder="blur"
-                    blurDataURL={blurDataURLs.darker}
-                    loading="lazy"
+                    loading="eager"
                   />
                   <div
                     className={`absolute inset-0 bg-black/40 transition-all duration-300 ${

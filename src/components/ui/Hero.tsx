@@ -8,6 +8,7 @@ interface HeroProps {
   siteSettings: SiteSettings
 }
 
+// Server Component - fast rendering with static content
 const Hero: React.FC<HeroProps> = ({ siteSettings }) => {
   return (
     <section className="relative h-screen overflow-hidden bg-black">
@@ -37,11 +38,7 @@ const Hero: React.FC<HeroProps> = ({ siteSettings }) => {
                   sizes="(max-width: 640px) 112px, (max-width: 768px) 144px, (max-width: 1024px) 192px, (max-width: 1280px) 224px, 256px"
                   priority
                   unoptimized={siteSettings.heroLogo.endsWith('.svg')}
-                  className="h-28 sm:h-36 md:h-48 lg:h-56 xl:h-64 w-auto object-contain brightness-0 saturate-100"
-                  style={{
-                    filter:
-                      'invert(27%) sepia(96%) saturate(5471%) hue-rotate(355deg) brightness(104%) contrast(94%)',
-                  }}
+                  className="h-28 sm:h-36 md:h-48 lg:h-56 xl:h-64 w-auto object-contain brightness-0 saturate-100 logo-accent-filter"
                 />
               </div>
             </div>
