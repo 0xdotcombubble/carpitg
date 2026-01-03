@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API)
+// Lazy-load Resend client to avoid build-time initialization errors
+function getResendClient() {
+  const apiKey = process.env.RESEND_API
+  if (!apiKey) {
+    throw new Error('RESEND_API environment variable is not set')
+  }
+  return new Resend(apiKey)
+}
 
 interface ContactFormData {
   name: string
@@ -66,6 +73,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Send confirmation email to customer (in Hungarian)
+    const resend = getResendClient()
     const customerEmailPromise = resend.emails.send({
       from: 'CarPit Garage <info@carpitgarage.hu>',
       to: email,
